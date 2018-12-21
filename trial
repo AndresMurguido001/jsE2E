@@ -1,0 +1,5 @@
+#! /bin/bash
+
+TRIAL_UUID=$1
+
+open "https://api.dev.govworks.com/api/trial/$TRIAL_UUID"

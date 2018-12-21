@@ -1,0 +1,11 @@
+#!/usr/bin/expect -f
+
+set timeout 3
+
+spawn ./trials
+expect "password:"
+send "testtest\r"
+expect "password:"
+send "testtest\r"
+
+interact

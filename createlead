@@ -1,0 +1,39 @@
+#! /usr/local/bin/bash
+
+#TODO add check for bash version since this program requires bash 4 for the associative arrays
+
+API_URL="https://api.dev.govworks.com/api"
+HOTLEAD_URL="$API_URL/hotlead"
+
+declare -A PRODUCTS
+#Products
+PRODUCTS[NEW_PASSPORT]=26a4caca-4a23-4330-91f7-48f6870e126e;
+PRODUCTS[PASSPORT_RENEWAL]=74d9a12f-5b7e-41d7-98bb-17c90140510c;
+PRODUCTS[CHILD_PASSPORT]=47ade3e3-a858-429f-8056-f14e1f643bc5;
+PRODUCTS[LOST_PASSPORT]=79107f86-17e4-4fb5-9433-140bf92863bf;
+PRODUCTS[DAMAGED_PASSPORT]=68503f3d-d5e0-409e-9417-f5a3d4521d48;
+PRODUCTS[NAME_CHANGE]=09e04608-1c94-4304-b950-7dde1e3e90e9;
+PRODUCTS[SECOND_PASSPORT]=ffb647e7-ef91-4483-ad67-e2299d79f31a;
+PRODUCTS[STOLEN_PASSPORT]=0c757ff5-5930-4352-bfb7-8e6a8054ded6;
+
+declare -A OPTIONS
+#Expediting options PC
+OPTIONS[SAME_DAY]="f3952d48-c3ef-4544-993f-2e3e9d2ef8c9"
+OPTIONS[NEXT_DAY]="00a6bb18-b1bb-4f38-9afb-b27396c65821"
+OPTIONS[PRIORITY]="0f1596dd-16d8-4c99-ab11-89b07efb662e"
+OPTIONS[RUSH]="5bcfe733-806d-4f43-b41c-5c9cb78ad39c"
+OPTIONS[STANDARD]="e8e275d1-d370-4c00-af3e-2de7f3e29e68"
+OPTIONS[SMART]="4f8799a0-b1f1-4e51-ae2f-c968c1c8fbca"
+
+PRODUCT=${PRODUCTS[$1]};
+OPTION=${OPTIONS[$2]};
+EMAIL=$3
+
+curl $HOTLEAD_URL \
+-H 'Accept: application/json, text/plain, */*' \
+-H 'Referer: https://dev.passportcenter.com/checkout/step2' \
+-H 'Origin: https://dev.passportcenter.com' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36' \
+-H 'Content-Type: application/json;charset=UTF-8' \
+--request POST \
+--data-binary $'{"source":"passportcenter","itinerary":{"destinations":[{"country":null,"dates":{"startDate":null,"endDate":null}}],"travelers":{"adults":1,"children":0}},"travelers":[{"info":{"first_name":"Javier","last_name":"Feliz","citizenship":null,"residency":null,"date_of_birth":"10/10/1989"},"products":[{"uuid":"'"$PRODUCT"'","option_uuid":"'"$OPTION"'","outbound_speed":"usps_priority_overnight","option_label":"Standard","product_label":"Passport Renewal","service_type":"standard_service","cost":149,"addons":[]}]}],"user_profile":{"first_name":"Javier","last_name":"Feliz","email":"'"$EMAIL"'","phones":[{"type":"mobile","friendly_name":"Mobile Number","country":"US","value":"3456785432","disabled":true,"required":true,"hint":"Well use this number to send SMS notifications."},{"type":"landline","friendly_name":"Home or Office Number","country":"US","value":""}],"country":"US","company_name":null,"addresses":[{"type":"billing","address_1":"","address_2":"","city":"","state":"","country":"US","postal_code":""},{"type":"shipping","address_1":"","address_2":"","city":"","state":"","country":"US","postal_code":""}]},"gw_tracker":{"referer":"direct","query_string":""}}' --compressed

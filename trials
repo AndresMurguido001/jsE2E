@@ -1,0 +1,29 @@
+#! /bin/bash
+source ./util
+DATE=$(date "+%m%d%y")
+HOTLEAD_QUERY="SELECT uuid from hot_leads WHERE email LIKE '%$DATE%' ORDER BY created_at DESC LIMIT 4"
+
+echo $HOTLEAD_QUERY
+
+UUIDS=$(mycli -u --pass testtest root -h dev.cluster-crzjfb0ik55e.us-east-1.rds.amazonaws.com -D govworks -e "$HOTLEAD_QUERY" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d")
+
+echo $UUIDS | tr " " "\n"
+
+UUID_ARRAY=$(echo $UUIDS | tr " " "\n")
+
+for uuid in $UUID_ARRAY
+do
+	#open "https://api.dev.govworks.com/api/trial/$uuid"
+	curl -L --write-out '%{http_code}\n' --silent --output /dev/null "https://api.dev.govworks.com/api/trial/$uuid"
+done
+
+USERS_QUERY="UPDATE users SET password = '\$2y\$10\$D0C7hvq5m5eK.ccKTlIi4.KmrJL7ULj5.SxnGdwv/d/RIWLYqKV4G', new = 0 WHERE email LIKE '%$DATE%' ORDER BY created_at DESC LIMIT 4"
+
+echo $USERS_QUERY
+
+sql "$USERS_QUERY"
+
+echo "javier.feliz+PC${DATE}NM@govworks.com"
+echo "javier.feliz+PC${DATE}MA@govworks.com"
+echo "javier.feliz+PR${DATE}NM@govworks.com"
+echo "javier.feliz+PR${DATE}MA@govworks.com"
