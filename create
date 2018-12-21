@@ -1,0 +1,61 @@
+#! /usr/local/bin/bash
+source ./util
+
+echo "Creating order in $API_URL";
+echo
+DATE=$(printf '%x\n' $(date +%s))
+
+case $1 in 
+    MAILAWAY ) 
+        EMAIL=$EMAIL_BASE+PR${DATE}MA@govworks.com
+        echo "Passport renewal order with smart ship (Mailaway)"
+        echo
+        run ./createorder PASSPORT_RENEWAL SMART $EMAIL
+        echo -n "Would  you like to fill out the users profile? (y/n): "
+        read RESPONSE
+        if [ $RESPONSE == "y" ];
+        then
+            echo "Ok, generating profile"
+            echo "Pls note that at the moment we can only fill out using child passport info"
+            run ./fillapp $EMAIL
+        fi
+        ;;
+    AUTO )
+        EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
+        echo "New passport order with rush ship (Automanifest)"
+        echo
+        run ./createorder NEW_PASSPORT RUSH $EMAIL passportcenter
+        echo -n "Would  you like to fill out the users profile? (y/n): "
+        read RESPONSE
+        if [ $RESPONSE == "y" ];
+        then
+            echo "Ok, generating profile"
+            echo "Pls note that at the moment we can only fill out using child passport info"
+            run ./fillapp $EMAIL
+        fi
+        ;;
+    TRIAL )
+        EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
+        echo "New passport trial with rush shipping (Automanifest)"
+        echo
+        run ./createtrial NEW_PASSPORT RUSH $EMAIL
+        echo -n "Would  you like to fill out the users profile? (y/n): "
+        read RESPONSE
+        if [ $RESPONSE == "y" ];
+        then
+            echo "Ok, generating profile"
+            echo "Pls note that at the moment we can only fill out using child passport info"
+            run ./fillapp $EMAIL
+        fi
+        ;;
+    e2e )
+        echo "Running E2E for you, sit back and relax"
+        echo "At the moment this script only creates an mailaway order in portal"
+        cd ~/gw/gov-portal/tests/E2E-Testing && npm i | npm run update | npm run server
+        cd ~/gw/gov-portal/tests/E2E-Testing && npm run mailaway
+        ;;
+    * ) 
+        echo "Bad argument, right now you could only type one of the following options: MAILAWAY, AUTO, E2E";;
+esac
+
+

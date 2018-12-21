@@ -1,29 +1,20 @@
-#! /bin/bash
+#! /usr/local/bin/bash
 source ./util
+
 DATE=$(date "+%m%d%y")
-HOTLEAD_QUERY="SELECT uuid from hot_leads WHERE email LIKE '%$DATE%' ORDER BY created_at DESC LIMIT 4"
 
-echo $HOTLEAD_QUERY
+echo '';
+echo 'CREATING TRIALS';
+echo '';
 
-UUIDS=$(mycli -u --pass testtest root -h dev.cluster-crzjfb0ik55e.us-east-1.rds.amazonaws.com -D govworks -e "$HOTLEAD_QUERY" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d")
+run ./createtrial NEW_PASSPORT RUSH $EMAIL_BASE+PC${DATE}NM@govworks.com
+run ./createtrial PASSPORT_RENEWAL STANDARD $EMAIL_BASE+PC${DATE}MA@govworks.com
+run ./createtrial LOST_PASSPORT SAME_DAY $EMAIL_BASE+PR${DATE}NM@govworks.com passportrenewal
+run ./createtrial PASSPORT_RENEWAL SMART $EMAIL_BASE+PR${DATE}MA@govworks.com passportrenewal
 
-echo $UUIDS | tr " " "\n"
+echo "Filling the applications"
 
-UUID_ARRAY=$(echo $UUIDS | tr " " "\n")
-
-for uuid in $UUID_ARRAY
-do
-	#open "https://api.dev.govworks.com/api/trial/$uuid"
-	curl -L --write-out '%{http_code}\n' --silent --output /dev/null "https://api.dev.govworks.com/api/trial/$uuid"
-done
-
-USERS_QUERY="UPDATE users SET password = '\$2y\$10\$D0C7hvq5m5eK.ccKTlIi4.KmrJL7ULj5.SxnGdwv/d/RIWLYqKV4G', new = 0 WHERE email LIKE '%$DATE%' ORDER BY created_at DESC LIMIT 4"
-
-echo $USERS_QUERY
-
-sql "$USERS_QUERY"
-
-echo "javier.feliz+PC${DATE}NM@govworks.com"
-echo "javier.feliz+PC${DATE}MA@govworks.com"
-echo "javier.feliz+PR${DATE}NM@govworks.com"
-echo "javier.feliz+PR${DATE}MA@govworks.com"
+run ./fillapp $EMAIL_BASE+PC${DATE}NM@govworks.com
+run ./fillapp $EMAIL_BASE+PC${DATE}MA@govworks.com
+run ./fillapp $EMAIL_BASE+PR${DATE}NM@govworks.com
+run ./fillapp $EMAIL_BASE+PR${DATE}MA@govworks.com

@@ -1,0 +1,93 @@
+"date_of_birth": {
+    "version": 100000,
+    "value": "$DOB"
+},
+"last_name": {
+    "version": 100000,
+    "value": "$LASTNAME"
+},
+"first_name": {
+    "version": 100000,
+    "value": "$FIRSTNAME"
+},
+"residence_state": {
+    "version": 100000,
+    "value": "$RESIDENCE_STATE"
+},
+"nationality_citizenship": {
+    "version": 100000,
+    "value": "$NATIONALITY"
+},
+"middle_name": {
+    "version": 100000,
+    "value": "$MIDDLE_NAME"
+},
+"birth_country": {
+    "version": 100000,
+    "value": "$BIRTH_COUNTRY"
+},
+"birth_city": {
+    "version": 100000,
+    "value": "$BIRTH_CITY"
+},
+"birth_state": {
+    "version": 100000,
+    "value": "$BIRTH_STATE"
+},
+"hair_color": {
+    "version": 100000,
+    "value": "$HAIR_COLOR"
+},
+"eye_color": {
+    "version": 100000,
+    "value": "$EYE_COLOR"
+},
+"height": {
+    "feet": {
+        "version": 100000,
+        "value": 5
+    },
+    "inches": {
+        "version": 100000,
+        "value": 9
+    }
+},
+"gender": {
+    "version": 100000,
+    "value": "$GENDER"
+},
+"address": {
+    "address_1": {
+        "version": 100000,
+        "value": "$ADDRESS_1"
+    },
+    "address_2": {
+        "version": 100000
+    },
+    "zip": {
+        "version": 100000,
+        "value": "$ZIP"
+    },
+    "city": {
+        "version": 100000,
+        "value": "$CITY"
+    },
+    "state": {
+        "version": 100000,
+        "value": "$STATE"
+    }
+},
+"contact_phone_home": {
+    "version": 100000,
+    "value": "$PHONE"
+},
+"contact_email": {
+    "version": 100000,
+    "value": "$EMAIL"
+},
+"name_change": {
+    "answer": {
+        "version": 100000,
+        "value": "$NAME_CHANGE"
+    }
+}

@@ -1,0 +1,98 @@
+{
+    "model": {
+      "date_of_birth": { "version": 100000, "value": "$DOB" },
+      "last_name": { "version": 100000, "value": "$LASTNAME" },
+      "first_name": { "version": 100000, "value": "$FIRSTNAME" },
+      "residence_state": { "version": 100000, "value": "$RESIDENCE_STATE" },
+      "nationality_citizenship": { "version": 100000, "value": "$NATIONALITY" },
+      "middle_name": { "version": 100000, "value": "$MIDDLE_NAME" },
+      "birth_country": { "version": 100000, "value": "$BIRTH_COUNTRY" },
+      "birth_city": { "version": 100000, "value": "$BIRTH_CITY" },
+      "birth_state": { "version": 100000, "value": "$BIRTH_STATE" },
+      "hair_color": { "version": 100000, "value": "$HAIR_COLOR" },
+      "eye_color": { "version": 100000, "value": "$EYE_COLOR" },
+      "height": {
+        "feet": { "version": 100000, "value": 5 },
+        "inches": { "version": 100000, "value": 9 } 
+      },
+      "gender": { "version": 100000, "value": "$GENDER" },
+      "address": {
+        "address_1": { "version": 100000, "value": "$ADDRESS_1" },
+        "address_2": { "version": 100000 },
+        "zip": { "version": 100000, "value": "$ZIP" },
+        "city": { "version": 100000, "value": "$CITY" },
+        "state": { "version": 100000, "value": "$STATE" }
+      },
+      "contact_phone_home": { "version": 100000, "value": "$PHONE" },
+      "contact_email": {
+        "version": 100000,
+        "value": "$EMAIL"
+      },
+      "name_change": { "answer": { "version": 100000, "value": "$NAME_CHANGE" } },
+      "child_passport": { "parents": { "version": 100000, "value": "$PARENTS" } },
+      "frequent_traveler": { "version": 100000, "value": "$FREQUENT" },
+      "employment_status": { "answer": { "version": 1000000, "value": "$EMPLOYMENT_STATUS" } },
+      "emergency_contact": {
+        "answer": { "version": 100000, "value": "$EMERGENCY_CONTACT" },
+        "relationship": { "version": 100000, "value": "$RELATIONSHIP" },
+        "address": {
+          "address_1": { "version": 100000, "value": "50 Biscayne Blvd" },
+          "address_2": { "version": 100000 },
+          "zip": { "version": 100000, "value": "33132" },
+          "city": { "version": 100000, "value": "Miami" },
+          "state": { "version": 100000, "value": "FL" }
+        },
+        "phone_number": { "version": 100000, "value": "(342) 354-8329" },
+        "first_name": { "version": 100000, "value": "$EMERGENCY_FIRST" },
+        "last_name": { "version": 100000, "value": "$EMERGENCY_LAST" }
+      },
+      "issued_passports": { "version": 100000, "value": "$ISSUED_PASSPORTS" },
+      "mother": { "unknown": { "version": 100000, "value": "$MOTHER" } },
+      "father": { "unknown": { "version": 100000, "value": "$FATHER" } },
+      "married": { "answer": { "version": 100000, "value": "$MARRIED" } },
+      "divorced_widowed": { "answer": { "version": 100000, "value": "$DIVORCED" } },
+      "social_security": { "version": 1000000, "value": "$SOCIAL" },
+      "photo_location": {
+        "value": {
+          "zip": "33132",
+          "facility": {
+            "uuid": "ca20b9cb-3f9d-4070-a4a3-944f2d5de27c",
+            "slug": "cvs-4613-miami",
+            "category": "passport-photo",
+            "state": "FL",
+            "city": "Miami",
+            "country": "United States",
+            "origin": "United States",
+            "zip": "33132",
+            "latitude": 25.7755,
+            "longitude": -80.1879,
+            "distance": 0.7486183518188991,
+            "company": "cvs",
+            "store_number": "4613",
+            "address": {
+              "zip": "33132",
+              "state": "FL",
+              "city": "Miami",
+              "phone": "+17868380316",
+              "address_1": "200 Biscayne Boulevard"
+            },
+            "hours": {
+              "r": { "close": "8:00 PM", "open": "10:00 AM" },
+              "su": { "close": null, "open": "Closed" },
+              "s": { "close": "5:00 PM", "open": "10:00 AM" },
+              "t": { "close": "8:00 PM", "open": "10:00 AM" },
+              "f": { "close": "8:00 PM", "open": "10:00 AM" },
+              "w": { "close": "8:00 PM", "open": "10:00 AM" },
+              "m": { "close": "8:00 PM", "open": "10:00 AM" }
+            },
+            "is_24_hours": false,
+            "phone": "+17868380316",
+            "name": "CVS Pharmacy at  200 Biscayne Boulevard  Miami,  FL 33132",
+            "vaccines": []
+          }
+        },
+        "version": 100000
+      }
+    }
+  }
+  

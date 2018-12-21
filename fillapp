@@ -1,0 +1,47 @@
+#! /usr/local/bin/bash
+source ./util
+
+get_application_fill_model() {
+    #The argument is the product type. Ex. passport-renewal
+    PERSONAL_PROFILE=`envsubst <./data/application-models/personal-profile.json`;
+    APPLICATION_DATA=`envsubst <./data/application-models/$1.json`;
+
+    MODEL="{\"model\": {"$PERSONAL_PROFILE","$APPLICATION_DATA"}}"
+
+    echo $MODEL;
+}
+
+get_user_order_product_type() {
+    # Argument 1 is user's email
+    GET_PRODUCT_TYPE_QUERY="SELECT products.subtype FROM users JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id JOIN products ON products.id = applications.product_id WHERE users.email = '$1' LIMIT 1"
+    RESULT="$(sql "$GET_PRODUCT_TYPE_QUERY")"
+    remove_first_line_from_sql_output "$RESULT"
+}
+
+GET_TRAVELER_QUERY="SELECT travelers.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN travelers ON travelers.order_id = user_orders.order_id WHERE users.email = '$1' LIMIT 1 "
+TRAVELER_UUID=$( sql "$GET_TRAVELER_QUERY" | sed -n '1!p' | sed -E "s/\"//g")
+
+URL="https://api.dev.govworks.com/api/traveler/$TRAVELER_UUID/update/model"
+
+# GET LOGIN COOKIE
+get_cookie $1
+
+# IF YOU WANT TO TEST IF SESSION COOKIE IS VALID
+# UNCOMMENT THE LINES BELOW
+# URL="https://api.dev.govworks.com/api/order"
+# get_request $URL
+
+# POST FILLED APPLICATION FOR TRAVELER
+
+if [[ -z "$2" ]] #If the second parameter is empty, auto detect the product type of the application
+then
+    PRODUCT_TYPE="$(get_user_order_product_type "$1")"
+    echo "Detected $PRODUCT_TYPE application"
+else
+    PRODUCT_TYPE="$2"
+    echo "Filling application as $2"
+fi
+
+api_call "$URL" "$(get_application_fill_model "$PRODUCT_TYPE")"
+echo
+echo "Filled application...for $1"
