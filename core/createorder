@@ -1,5 +1,8 @@
 #! /usr/local/bin/bash
-source ./util #Import the utility functions and data
+
+#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/util
 
 #TODO add check for bash version since this program requires bash 4 for the associative arrays
 ORDER_URL="$API_URL/order/create"

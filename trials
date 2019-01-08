@@ -1,5 +1,8 @@
 #! /usr/local/bin/bash
-source ./util
+
+#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/core/util
 
 DATE=$(date "+%m%d%y")
 
@@ -7,14 +10,15 @@ echo '';
 echo 'CREATING TRIALS';
 echo '';
 
-run ./createtrial NEW_PASSPORT RUSH $EMAIL_BASE+PC${DATE}NM@govworks.com
-run ./createtrial PASSPORT_RENEWAL STANDARD $EMAIL_BASE+PC${DATE}MA@govworks.com
-run ./createtrial LOST_PASSPORT SAME_DAY $EMAIL_BASE+PR${DATE}NM@govworks.com passportrenewal
-run ./createtrial PASSPORT_RENEWAL SMART $EMAIL_BASE+PR${DATE}MA@govworks.com passportrenewal
+run ./myscript
+# run ./createtrial NEW_PASSPORT RUSH $EMAIL_BASE+PC${DATE}NM@govworks.com
+# run ./createtrial PASSPORT_RENEWAL STANDARD $EMAIL_BASE+PC${DATE}MA@govworks.com
+# run ./createtrial LOST_PASSPORT SAME_DAY $EMAIL_BASE+PR${DATE}NM@govworks.com passportrenewal
+# run ./createtrial PASSPORT_RENEWAL SMART $EMAIL_BASE+PR${DATE}MA@govworks.com passportrenewal
 
-echo "Filling the applications"
+# echo "Filling the applications"
 
-run ./fillapp $EMAIL_BASE+PC${DATE}NM@govworks.com
-run ./fillapp $EMAIL_BASE+PC${DATE}MA@govworks.com
-run ./fillapp $EMAIL_BASE+PR${DATE}NM@govworks.com
-run ./fillapp $EMAIL_BASE+PR${DATE}MA@govworks.com
+# run ./fillapp $EMAIL_BASE+PC${DATE}NM@govworks.com
+# run ./fillapp $EMAIL_BASE+PC${DATE}MA@govworks.com
+# run ./fillapp $EMAIL_BASE+PR${DATE}NM@govworks.com
+# run ./fillapp $EMAIL_BASE+PR${DATE}MA@govworks.com
