@@ -64,13 +64,18 @@ set_user_password_to_password() {
     sql "$CHANGE_PASSWORD_QUERY"
 }
 
-get_script_path() {
+get_core_path() {
     dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     echo $dir;
 }
 
+get_root_path() {
+    dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../ && pwd )"
+    echo $dir;
+}
+
 run() {
-    dir=$(get_script_path)
+    dir=$(get_root_path)
     echo "Running $dir/$@"
     #/usr/local/bin/bash $dir/$@
 }
