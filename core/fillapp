@@ -3,8 +3,8 @@ source ./util
 
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
-    PERSONAL_PROFILE=`envsubst <./data/application-models/personal-profile.json`;
-    APPLICATION_DATA=`envsubst <./data/application-models/$1.json`;
+    PERSONAL_PROFILE=`envsubst <../data/application-models/personal-profile.json`;
+    APPLICATION_DATA=`envsubst <../data/application-models/$1.json`;
 
     MODEL="{\"model\": {"$PERSONAL_PROFILE","$APPLICATION_DATA"}}"
 
