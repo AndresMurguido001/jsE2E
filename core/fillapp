@@ -6,9 +6,9 @@ source $dir/util
 
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
-    dir=$(get_script_path)
-    PERSONAL_PROFILE=`envsubst <$dir/../data/application-models/personal-profile.json`;
-    APPLICATION_DATA=`envsubst <$dir/../data/application-models/$1.json`;
+    dir=$(get_root_path)
+    PERSONAL_PROFILE=`envsubst <$dir/data/application-models/personal-profile.json`;
+    APPLICATION_DATA=`envsubst <$dir/data/application-models/$1.json`;
 
     MODEL="{\"model\": {"$PERSONAL_PROFILE","$APPLICATION_DATA"}}"
 
