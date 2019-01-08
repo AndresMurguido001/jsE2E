@@ -5,7 +5,7 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $dir/util
 
 #                         product option email source
-run ./createlead $1 $2 $3 $4
+run core/createlead $1 $2 $3 $4
 
 email=$3
 UUID=$(get_lead_uuid "$email" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d");

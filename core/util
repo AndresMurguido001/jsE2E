@@ -76,8 +76,7 @@ get_root_path() {
 
 run() {
     dir=$(get_root_path)
-    echo "Running $dir/$@"
-    #/usr/local/bin/bash $dir/$@
+    /usr/local/bin/bash $dir/$@
 }
 
 declare -A PRODUCTS
