@@ -18,9 +18,9 @@ else #Right now you could just pass anything as the second parameter and the sou
     SOURCE='passportrenewal';
 fi
 
-EMAIL=$3
+EMAIL="$([ $3 ] && echo $3 || echo "$(random_email)")"
 
-echo "Creating a $2 $1 on $SOURCE under the email $3"
+echo "Creating a $2 $1 on $SOURCE under the email $EMAIL"
 
 api_call "$ORDER_URL" '{"source":"'"$SOURCE"'","itinerary":{"destinations":[{"country":null,"dates":{"startDate":null,"endDate":null}}],"travelers":{"adults":1,"children":0}},"travelers":[{"info":{"first_name":"'$FIRSTNAME'","last_name":"'$LASTNAME'","citizenship":null,"residency":null,"date_of_birth":"10/10/1989"},"products":[{"uuid":"'"$PRODUCT"'","option_uuid":"'"$OPTION"'","outbound_speed":"usps_priority_overnight","option_label":"Standard","product_label":"Passport Renewal","service_type":"standard_service","cost":149,"addons":[]}]}],"user_profile":{"first_name":"'$FIRSTNAME'","last_name":"'$LASTNAME'","email":"'"$EMAIL"'","phones":[{"type":"mobile","friendly_name":"Mobile Number","country":"US","value":"3456785432","disabled":true,"required":true,"hint":"Well use this number to send SMS notifications."},{"type":"landline","friendly_name":"Home or Office Number","country":"US","value":""}],"country":"US","company_name":null,"addresses":[{"type":"billing","address_1":"123","address_2":"","city":"Miami","state":"FL","country":"US","postal_code":"33133"},{"type":"shipping","address_1":"123","address_2":"","city":"Miami","state":"FL","country":"US","postal_code":"33133"}]},"gw_tracker":{"referer":"direct","query_string":""}, "merchant": "sandbox", "payment_token": "tok_visa"}'
 
