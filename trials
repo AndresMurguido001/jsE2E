@@ -10,14 +10,16 @@ echo '';
 echo 'CREATING TRIALS';
 echo '';
 
-run ./createtrial NEW_PASSPORT RUSH $EMAIL_BASE+PC${DATE}NM@govworks.com
-run ./createtrial PASSPORT_RENEWAL STANDARD $EMAIL_BASE+PC${DATE}MA@govworks.com
-run ./createtrial LOST_PASSPORT SAME_DAY $EMAIL_BASE+PR${DATE}NM@govworks.com passportrenewal
-run ./createtrial PASSPORT_RENEWAL SMART $EMAIL_BASE+PR${DATE}MA@govworks.com passportrenewal
+run core/createtrial NEW_PASSPORT RUSH $EMAIL_BASE+PC${DATE}NM@govworks.com
+run core/createtrial PASSPORT_RENEWAL STANDARD $EMAIL_BASE+PC${DATE}MA@govworks.com
+run core/createtrial LOST_PASSPORT SAME_DAY $EMAIL_BASE+PR${DATE}NM@govworks.com passportrenewal
+run core/createtrial PASSPORT_RENEWAL SMART $EMAIL_BASE+PR${DATE}MA@govworks.com passportrenewal
 
+echo '';
 echo "Filling the applications"
+echo '';
 
-run ./fillapp $EMAIL_BASE+PC${DATE}NM@govworks.com
-run ./fillapp $EMAIL_BASE+PC${DATE}MA@govworks.com
-run ./fillapp $EMAIL_BASE+PR${DATE}NM@govworks.com
-run ./fillapp $EMAIL_BASE+PR${DATE}MA@govworks.com
+run core/fillapp $EMAIL_BASE+PC${DATE}NM@govworks.com
+run core/fillapp $EMAIL_BASE+PC${DATE}MA@govworks.com
+run core/fillapp $EMAIL_BASE+PR${DATE}NM@govworks.com
+run core/fillapp $EMAIL_BASE+PR${DATE}MA@govworks.com
