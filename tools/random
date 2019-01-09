@@ -1,0 +1,10 @@
+# Randomly sorting lines
+# echo $(sort --random-sort ./names.txt | head -n 1)
+
+# Magic https://stackoverflow.com/a/449890
+FULLNAME=$(head -$((${RANDOM} % `wc -l < ../data/names.txt` + 1)) ../data/names.txt | tail -1)
+FIRSTNAME=$(cut -d',' -f1 <<< $FULLNAME )
+LASTNAME=$(cut -d',' -f2 <<< $FULLNAME )
+MIDDLENAME=$(cut -d',' -f3 <<< $FULLNAME )
+
+echo "FIRST MIDDLE, LAST ---> $FIRSTNAME $MIDDLENAME, $LASTNAME"

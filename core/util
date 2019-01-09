@@ -59,6 +59,14 @@ login() {
     --data-binary $"$1" --compressed
 }
 
+# Magic https://stackoverflow.com/a/449890
+set_name() {
+    FULLNAME=$(head -$((${RANDOM} % `wc -l < ./data/names.txt` + 1)) ./data/names.txt | tail -1)
+    export FIRSTNAME=$(cut -d',' -f1 <<< $FULLNAME )
+    export LASTNAME=$(cut -d',' -f2 <<< $FULLNAME )
+    export MIDDLENAME=$(cut -d',' -f3 <<< $FULLNAME )
+}
+
 set_user_password_to_password() {
     CHANGE_PASSWORD_QUERY="UPDATE users SET password = '\$2y\$10\$D0C7hvq5m5eK.ccKTlIi4.KmrJL7ULj5.SxnGdwv/d/RIWLYqKV4G', new = 0 WHERE email = '$1'"
     sql "$CHANGE_PASSWORD_QUERY"
