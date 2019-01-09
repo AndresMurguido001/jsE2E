@@ -6,6 +6,7 @@ source $dir/util
 
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
+    set_name
     dir=$(get_root_path)
     PERSONAL_PROFILE=`envsubst <$dir/data/application-models/personal-profile.json`;
     APPLICATION_DATA=`envsubst <$dir/data/application-models/$1.json`;
@@ -29,11 +30,6 @@ URL="https://api.dev.govworks.com/api/traveler/$TRAVELER_UUID/update/model"
 
 # GET LOGIN COOKIE
 get_cookie $1
-
-# IF YOU WANT TO TEST IF SESSION COOKIE IS VALID
-# UNCOMMENT THE LINES BELOW
-# URL="https://api.dev.govworks.com/api/order"
-# get_request $URL
 
 # POST FILLED APPLICATION FOR TRAVELER
 

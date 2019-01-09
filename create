@@ -1,51 +1,50 @@
 #! /usr/local/bin/bash
-source ./util
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/core/util
 
 echo "Creating order in $API_URL";
 echo
 DATE=$(printf '%x\n' $(date +%s))
 
 case $1 in 
-    MAILAWAY ) 
+    MAILAWAY )
+         
         EMAIL=$EMAIL_BASE+PR${DATE}MA@govworks.com
-        echo "Passport renewal order with smart ship (Mailaway)"
         echo
-        run ./createorder PASSPORT_RENEWAL SMART $EMAIL
+        run core/createorder PASSPORT_RENEWAL SMART $EMAIL
+        echo "Created passport renewal order for $EMAIL, smart shipping (Mailaway)"
         echo -n "Would  you like to fill out the users profile? (y/n): "
         read RESPONSE
         if [ $RESPONSE == "y" ];
         then
             echo "Ok, generating profile"
-            echo "Pls note that at the moment we can only fill out using child passport info"
-            run ./fillapp $EMAIL
+            run core/fillapp $EMAIL
         fi
         ;;
     AUTO )
         EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
-        echo "New passport order with rush ship (Automanifest)"
         echo
-        run ./createorder NEW_PASSPORT RUSH $EMAIL passportcenter
+        run core/createorder NEW_PASSPORT RUSH $EMAIL passportcenter
+        echo "Created new passport order for $EMAIL, rush shipping (Automanifest)"
         echo -n "Would  you like to fill out the users profile? (y/n): "
         read RESPONSE
         if [ $RESPONSE == "y" ];
         then
             echo "Ok, generating profile"
-            echo "Pls note that at the moment we can only fill out using child passport info"
-            run ./fillapp $EMAIL
+            run core/fillapp $EMAIL
         fi
         ;;
     TRIAL )
         EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
         echo "New passport trial with rush shipping (Automanifest)"
         echo
-        run ./createtrial NEW_PASSPORT RUSH $EMAIL
+        run core/createtrial NEW_PASSPORT RUSH $EMAIL
         echo -n "Would  you like to fill out the users profile? (y/n): "
         read RESPONSE
         if [ $RESPONSE == "y" ];
         then
             echo "Ok, generating profile"
-            echo "Pls note that at the moment we can only fill out using child passport info"
-            run ./fillapp $EMAIL
+            run core/fillapp $EMAIL
         fi
         ;;
     e2e )
