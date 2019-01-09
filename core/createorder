@@ -18,7 +18,7 @@ else #Right now you could just pass anything as the second parameter and the sou
     SOURCE='passportrenewal';
 fi
 
-EMAIL=$3
+EMAIL="$([ $3 ] && echo $3 || echo "$(random_email)")"
 
 set_name
 echo "Creating a $2 $1 on $SOURCE under the email $3 for $FIRSTNAME"
