@@ -79,6 +79,11 @@ run() {
     /usr/local/bin/bash $dir/$@
 }
 
+random_email() {
+    ID="$(printf '%x\n' $(python -c 'from time import time; print int(round(time() * 1000))'))"
+    echo "$EMAIL_BASE+$ID@govworks.com"
+}
+
 declare -A PRODUCTS
 #Products
 PRODUCTS[NEW_PASSPORT]=26a4caca-4a23-4330-91f7-48f6870e126e;
