@@ -1,5 +1,6 @@
 #! /usr/local/bin/bash
-source ./config
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/../config
 
 
 sql() {
@@ -63,8 +64,19 @@ set_user_password_to_password() {
     sql "$CHANGE_PASSWORD_QUERY"
 }
 
+get_core_path() {
+    dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    echo $dir;
+}
+
+get_root_path() {
+    dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../ && pwd )"
+    echo $dir;
+}
+
 run() {
-    /usr/local/bin/bash $@
+    dir=$(get_root_path)
+    /usr/local/bin/bash $dir/$@
 }
 
 declare -A PRODUCTS

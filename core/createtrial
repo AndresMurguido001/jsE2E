@@ -1,7 +1,11 @@
 #! /usr/local/bin/bash
-source ./util
+
+#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/util
+
 #                         product option email source
-/usr/local/bin/bash ./createlead $1 $2 $3 $4
+run core/createlead $1 $2 $3 $4
 
 email=$3
 UUID=$(get_lead_uuid "$email" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d");
