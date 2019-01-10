@@ -1,3 +1,39 @@
+"frequent_traveler": {
+    "version": 100000,
+    "value": "no"
+},
+"employment_status": {
+    "answer": {
+        "version": 1000000,
+        "value": "no"
+    },
+    "employer": {
+        "version": 1000000
+    },
+    "position": {
+        "version": 100000
+    }
+},
+"divorced_widowed": {
+    "answer": {
+        "value": "no",
+        "version": 100000
+    }
+},
+"social_security": {
+    "version": 1000000,
+    "value": "123456756"
+},
+"emergency_contact": {
+    "answer": {
+        "version": 100000,
+        "value": "no"
+    }
+},
+"issued_passports": {
+    "version": 100000,
+    "value": "book"
+},
 "passport": {
     "number": {
         "version": 100000,
