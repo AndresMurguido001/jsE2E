@@ -136,3 +136,13 @@ Used to connect to the SQL server from the terminal. Check it out [here](https:/
 ```bash
 brew update && brew install mycli
 ```
+
+## Tools
+
+Created a [script](./tools/parse.js) that will help us parse through a json, and dump the full names of our [heroes](./data/heroes.json) into a [.txt](./data/names.txt) file. The objective is to have our automation scripts select a random name from the file every time we run them. The script is pretty dumb, so if you change the json you will have to update the script. Maybe for the next version we could make it find the fields on its own.
+
+To parse a json just run: 
+
+```bash
+cd ./tools && node parse.js
+```

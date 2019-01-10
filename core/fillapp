@@ -1,10 +1,15 @@
 #! /usr/local/bin/bash
-source ./util
+
+#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/util
 
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
-    PERSONAL_PROFILE=`envsubst <./data/application-models/personal-profile.json`;
-    APPLICATION_DATA=`envsubst <./data/application-models/$1.json`;
+    set_name
+    dir=$(get_root_path)
+    PERSONAL_PROFILE=`envsubst <$dir/data/application-models/personal-profile.json`;
+    APPLICATION_DATA=`envsubst <$dir/data/application-models/$1.json`;
 
     MODEL="{\"model\": {"$PERSONAL_PROFILE","$APPLICATION_DATA"}}"
 
@@ -25,11 +30,6 @@ URL="https://api.dev.govworks.com/api/traveler/$TRAVELER_UUID/update/model"
 
 # GET LOGIN COOKIE
 get_cookie $1
-
-# IF YOU WANT TO TEST IF SESSION COOKIE IS VALID
-# UNCOMMENT THE LINES BELOW
-# URL="https://api.dev.govworks.com/api/order"
-# get_request $URL
 
 # POST FILLED APPLICATION FOR TRAVELER
 

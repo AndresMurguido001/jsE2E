@@ -1,0 +1,17 @@
+#! /usr/local/bin/bash
+
+#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/util
+
+# product option email source
+email="$([ $3 ] && echo $3 || echo "$(random_email)")"
+echo "Creating lead with email $email"
+run core/createlead $1 $2 $email $4
+
+UUID=$(get_lead_uuid "$email" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d");
+curl -L --write-out "$email $UUID %{http_code}\n" --silent --output /dev/null "https://api.dev.govworks.com/api/trial/$UUID"
+
+set_user_password_to_password $email;
+
+echo "Login with $email";
