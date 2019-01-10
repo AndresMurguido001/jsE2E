@@ -1,3 +1,25 @@
+"frequent_traveler": {
+    "version": 100000,
+    "value": "no"
+},
+"employment_status": {
+    "answer": {
+        "version": 1000000,
+        "value": "no"
+    },
+    "employer": {
+        "version": 1000000
+    },
+    "position": {
+        "version": 100000
+    }
+},
+"emergency_contact": {
+    "answer": {
+        "version": 100000,
+        "value": "no"
+    }
+},
 "issued_passports": {
     "version": 100000,
     "value": "book"
