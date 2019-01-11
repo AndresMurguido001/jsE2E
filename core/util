@@ -30,11 +30,9 @@ api_call() {
 }
 
 get_cookie() {
-    echo "Retreiving login cookie..."
-    echo
     SESSION=$(login '{"email": "'$1'", "password": "'$PASSWORD'"}' | grep set-cookie: | awk '{print $2}')
     COOKIE=$SESSION
-    echo "New Session Cookie: $SESSION"
+    echo "Login Cookie: $SESSION"
 }
 
 get_lead_uuid() {
