@@ -1,151 +1,111 @@
-"passport": {
-    "number": {
+{
+    "social_security": {
+        "version" : 1000000,
+          "value": "123456789"
+      },
+      "issued_passports": {
         "version": 100000,
-        "value": "838913489"
+        "value": "book"
     },
-    "first_middle": {
-        "version": 100000,
-        "value": "Javier"
-    },
-    "last": {
-        "version": 100000,
-        "value": "Feliz"
-    },
-    "issue_date": {
-        "version": 100000,
-        "value": "10/10/2018"
-    },
-    "in_possession": {
-        "version": 100000,
-        "value": "stolen"
-    },
-    "not_in_possession": {
-        "issue_date_available": {
-            "version": 100000,
-            "value": "yes"
+      "emergency_contact" : {
+        "answer" : {
+          "version" : 100000,
+          "value" : "no"
         }
-    },
-    "is_damaged": {
-        "version": 100000,
-        "value": "no"
-    }
-},
-"father": {
-    "unknown": {
-        "version": 100000,
-        "value": "yes"
-    }
-},
-"middle_name": {
-    "version": 100000,
-    "value": "e"
-},
-"birth_city": {
-    "version": 100000,
-    "value": "dafsdfv"
-},
-"profile_uuid": "aed66d3f-a327-444d-b3ae-9800cd251760",
-"eye_color": {
-    "version": 100000,
-    "value": "brown"
-},
-"address": {
-    "zip": {
-        "version": 100000,
-        "value": "27838"
-    },
-    "state": {
-        "version": 100000,
-        "value": "FL"
-    },
-    "city": {
-        "version": 100000,
-        "value": "Miami"
-    },
-    "address_1": {
-        "version": 100000,
-        "value": "213"
-    },
-    "address_2": {
-        "version": 100000
-    }
-},
-"gender": {
-    "version": 100000,
-    "value": "male"
-},
-"frequent_traveler": {
-    "version": 100000,
-    "value": "no"
-},
-"photo_location": {
-    "value": {
-        "zip": "27838",
-        "facility": null
-    },
-    "version": 100000
-},
-"last_name": {
-    "version": 100000,
-    "value": "Yankee"
-},
-"height": {
-    "feet": {
-        "version": 100000,
-        "value": 2
-    },
-    "inches": {
-        "version": 100000,
-        "value": 2
-    }
-},
-"first_name": {
-    "version": 100000,
-    "value": "Daddy"
-},
-"married": {
-    "answer": {
-        "version": 100000,
-        "value": "no"
-    }
-},
-"contact_phone_home": {
-    "version": 100000,
-    "value": "(823) 489-2384"
-},
-"mother": {
-    "unknown": {
-        "version": 100000,
-        "value": "yes"
-    }
-},
-"residence_state": {
-    "version": 100000,
-    "value": null
-},
-"nationality_citizenship": {
-    "version": 100000,
-    "value": null
-},
-"lost_passport": {
-    "book": {
-        "how": {
-            "version": 100000,
-            "value": "I don't know"
-        },
-        "where": {
-            "version": 100000,
-            "value": "Miami, FL"
-        },
-        "when": {
-            "version": 100000,
-            "value": "10/10/2018"
-        }
-    },
-    "other": {
+      },
+      "divorced_widowed": {
         "answer": {
             "version": 100000,
             "value": "no"
         }
+    },
+    "employment_status": {
+      "answer": {
+          "version": 1000000,
+          "value": "no"
+      }
+  },
+      "passport" : {
+        "number": {
+          "version": 100000,
+          "value": "838913489"
+      },
+      "first_middle": {
+          "version": 100000,
+          "value": "$FIRSTNAME $MIDDLE_NAME"
+      },
+      "last": {
+          "version": 100000,
+          "value": "$LASTNAME"
+      },
+      "issue_date": {
+          "version": 100000,
+          "value": "10/10/2018"
+      },
+      "in_possession": {
+          "version": 100000,
+          "value": "stolen"
+      },
+      "not_in_possession": {
+          "issue_date_available": {
+              "version": 100000,
+              "value": "yes"
+          }
+      },
+      "is_damaged": {
+          "version": 100000,
+          "value": "no"
+      }
+      },
+      "father" : {
+        "unknown" : {
+          "version" : 100000,
+          "value" : "yes"
+        }
+      },
+      "frequent_traveler" : {
+        "version" : 100000,
+        "value" : "no"
+      },
+      "photo_location" : {
+        "value" : {
+          "zip" : "27838",
+          "facility" : null
+        },
+        "version" : 100000
+      },
+      "lost_passport" : {
+        "other" : {
+          "answer" : {
+            "version" : 100000,
+            "value" : "no"
+          }
+        },
+        "book" : {
+          "how" : {
+            "version" : 100000,
+            "value": "I lost it in a JSON file"
+          },
+          "when": {
+            "version": 100000,
+            "value": "$WHEN"
+        },
+          "where" : {
+            "version" : 100000,
+            "value" : "Miami, FL"
+          }
+        }
+      },
+      "married" : {
+        "answer" : {
+          "version" : 100000,
+          "value" : "no"
+        }
+      },
+      "mother" : {
+        "unknown" : {
+          "version" : 100000,
+          "value" : "yes"
+        }
+      }
     }
-}
