@@ -1,200 +1,111 @@
-"passport": {
+{
     "social_security": {
-        "version": 1000000,
-        "value": "$SOCIAL"
-    },
-    "birth_country": {
+        "version" : 1000000,
+          "value": "123456789"
+      },
+      "issued_passports": {
         "version": 100000,
-        "value": "$BIRTH_COUNTRY"
+        "value": "book"
     },
-    "issued_passports": {
-        "version": 100000,
-        "value": "$ISSUED_PASSPORTS"
-    },
-    "name_change": {
-        "answer": {
-            "version": 100000,
-            "value": "$NAME_CHANGE"
+      "emergency_contact" : {
+        "answer" : {
+          "version" : 100000,
+          "value" : "no"
         }
-    },
-    "hair_color": {
-        "version": 100000,
-        "value": "$HAIR_COLOR"
-    },
-    "date_of_birth": {
-        "version": 100000,
-        "value": "$DOB"
-    },
-    "contact_email": {
-        "version": 100000,
-        "value": "$EMAIL"
-    },
-    "emergency_contact": {
+      },
+      "divorced_widowed": {
         "answer": {
             "version": 100000,
-            "value": "$EMERGENCY_CONTACT"
-        }
-    },
-    "divorced_widowed": {
-        "answer": {
-            "version": 100000,
-            "value": "$DIVORCED"
+            "value": "no"
         }
     },
     "employment_status": {
-        "answer": {
-            "version": 1000000,
-            "value": "$EMPLOYEMENT_STATUS"
-        }
-    },
-    "passport": {
+      "answer": {
+          "version": 1000000,
+          "value": "no"
+      }
+  },
+      "passport" : {
         "number": {
-            "version": 100000,
-            "value": "$PASSPORT_NUMBER"
-        },
-        "first_middle": {
-            "version": 100000,
-            "value": "$FIRSTNAME $MIDDLE_NAME"
-        },
-        "last": {
-            "version": 100000,
-            "value": "$LASTNAME"
-        },
-        "issue_date": {
-            "version": 100000,
-            "value": "$ISSUED_DATE"
-        },
-        "in_possession": {
-            "version": 100000,
-            "value": "$IN_POSSESSION"
-        },
-        "not_in_possession": {
-            "issue_date_available": {
-                "version": 100000,
-                "value": "$NOT_IN_POSSESSION"
-            }
-        },
-        "is_damaged": {
-            "version": 100000,
-            "value": "$IS_DAMAGED"
+          "version": 100000,
+          "value": "838913489"
+      },
+      "first_middle": {
+          "version": 100000,
+          "value": "$FIRSTNAME $MIDDLE_NAME"
+      },
+      "last": {
+          "version": 100000,
+          "value": "$LASTNAME"
+      },
+      "issue_date": {
+          "version": 100000,
+          "value": "10/10/2018"
+      },
+      "in_possession": {
+          "version": 100000,
+          "value": "stolen"
+      },
+      "not_in_possession": {
+          "issue_date_available": {
+              "version": 100000,
+              "value": "yes"
+          }
+      },
+      "is_damaged": {
+          "version": 100000,
+          "value": "no"
+      }
+      },
+      "father" : {
+        "unknown" : {
+          "version" : 100000,
+          "value" : "yes"
         }
-    },
-    "father": {
-        "unknown": {
+      },
+      "frequent_traveler" : {
+        "version" : 100000,
+        "value" : "no"
+      },
+      "photo_location" : {
+        "value" : {
+          "zip" : "27838",
+          "facility" : null
+        },
+        "version" : 100000
+      },
+      "lost_passport" : {
+        "other" : {
+          "answer" : {
+            "version" : 100000,
+            "value" : "no"
+          }
+        },
+        "book" : {
+          "how" : {
+            "version" : 100000,
+            "value": "I lost it in a JSON file"
+          },
+          "when": {
             "version": 100000,
-            "value": "$FATHER"
+            "value": "$WHEN"
+        },
+          "where" : {
+            "version" : 100000,
+            "value" : "Miami, FL"
+          }
         }
-    },
-    "middle_name": {
-        "version": 100000,
-        "value": "$MIDDLE_NAME"
-    },
-    "birth_city": {
-        "version": 100000,
-        "value": "$BIRTH_CITY"
-    },
-    "address": {
-        "zip": {
-            "version": 100000,
-            "value": "$ZIP"
-        },
-        "state": {
-            "version": 100000,
-            "value": "$STATE"
-        },
-        "city": {
-            "version": 100000,
-            "value": "$CITY"
-        },
-        "address_1": {
-            "version": 100000,
-            "value": "$ADDRESS_1"
-        },
-        "address_2": {
-            "version": 100000
+      },
+      "married" : {
+        "answer" : {
+          "version" : 100000,
+          "value" : "no"
         }
-    },
-    "gender": {
-        "version": 100000,
-        "value": "$GENDER"
-    },
-    "frequent_traveler": {
-        "version": 100000,
-        "value": "$FREQUENT"
-    },
-    "photo_location": {
-        "value": {
-            "zip": "27838",
-            "facility": null
-        },
-        "version": 100000
-    },
-    "last_name": {
-        "version": 100000,
-        "value": "$LASTNAME"
-    },
-    "height": {
-        "feet": {
-            "version": 100000,
-            "value": 5
-        },
-        "inches": {
-            "version": 100000,
-            "value": 8
+      },
+      "mother" : {
+        "unknown" : {
+          "version" : 100000,
+          "value" : "yes"
         }
-    },
-    "lost_passport": {
-        "other": {
-            "answer": {
-                "version": 100000,
-                "value": "$LOST_PASSPORT"
-            }
-        },
-        "book": {
-            "how": {
-                "version": 100000,
-                "value": "I lost it in a JSON file"
-            },
-            "when": {
-                "version": 100000,
-                "value": "$WHEN"
-            },
-            "where": {
-                "version": 100000,
-                "value": "Miami, FL"
-            }
-        }
-    },
-    "first_name": {
-        "version": 100000,
-        "value": "$FIRSTNAME"
-    },
-    "married": {
-        "answer": {
-            "version": 100000,
-            "value": "$MARRIED"
-        }
-    },
-    "contact_phone_home": {
-        "version": 100000,
-        "value": "$PHONE"
-    },
-    "mother": {
-        "unknown": {
-            "version": 100000,
-            "value": "$MOTHER"
-        }
-    },
-    "birth_state": {
-        "version": 100000,
-        "value": "$BIRTH_STATE"
-    },
-    "residence_state": {
-        "version": 100000,
-        "value": null
-    },
-    "nationality_citizenship": {
-        "version": 100000,
-        "value": null
+      }
     }
-}
