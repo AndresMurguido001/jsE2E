@@ -1,0 +1,47 @@
+echo "  __   _  _  ____  __   _  _   __  ____  __  __   __ _"
+echo " / _\ / )( \(_  _)/  \ ( \/ ) / _\(_  _)(  )/  \ (  ( \ "
+echo "/    \) \/ (  )( (  O )/ \/ \/    \ )(   )((  O )/    / "
+echo "\_/\_/\____/ (__) \__/ \_)(_/\_/\_/(__) (__)\__/ \_)__) "
+
+echo "Welcome to the automation suite."
+
+# This script is meant to be the entry point to any other script in the suite
+# It does a lot of important things, one of them being resolving paths and exposing them as variables to the other scripts
+# This way we avoid having to copy the import statement every time we want to make a new script
+# We also source all the util functions and export them so they're available to the other scripts without them having to import util in each one
+
+PROGRAM_TO_RUN=$@
+
+# Paths to the important directories
+ROOT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CORE_DIRECTORY="$ROOT_DIRECTORY/core"
+PERSONAL_DIRECTORY="$ROOT_DIRECTORY/personal"
+
+echo "Root: $ROOT_DIRECTORY"
+echo "Core: $CORE_DIRECTORY"
+echo "Personal: $PERSONAL_DIRECTORY"
+
+# Get the env variables
+set -o allexport;
+source .env;
+set +o allexport
+
+# Util functions
+set -o allexport
+source $CORE_DIRECTORY/util
+set +o allexport
+
+#TODO Figure out how to export product and options array or change the mechanism completely
+
+# Export all the variables
+export ROOT_DIRECTORY
+export CORE_DIRECTORY
+export PERSONAL_DIRECTORY
+
+# Run the program
+
+echo # Echo empty line to start
+echo "Running: $@"
+echo
+/usr/local/bin/bash $ROOT_DIRECTORY/$@
+echo # Echo empty linke to end
