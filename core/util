@@ -14,25 +14,25 @@ remove_first_line_from_sql_output() {
 api_call() {
     #Parameter 1 is URL
     #parameter 2 is Payload
-    echo $1
-    curl $1 \
+    #Parameter 3 is optional and it's the method
+    METHOD=$([ $3 ] && echo $3 || echo POST)\
+    
+    curl --silent --output /dev/null "$1" \
     -H 'Accept: application/json, text/plain, */*' \
     -H 'Referer: https://dev.passportcenter.com/checkout/step4' \
     -H 'Origin: https://dev.passportcenter.com' \
     -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36' \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    --cookie $COOKIE \
-    --request POST \
-    --write-out "%{http_code}\n" \
+    --cookie "$COOKIE" \
+    -X "$METHOD" \
+    --write-out "Api Call: $METHOD $1 %{http_code}\n" \
     --data-binary $"$2" --compressed
 }
 
 get_cookie() {
-    echo "Retreiving login cookie..."
-    echo
     SESSION=$(login '{"email": "'$1'", "password": "'$PASSWORD'"}' | grep set-cookie: | awk '{print $2}')
     COOKIE=$SESSION
-    echo "New Session Cookie: $SESSION"
+    echo "Login Cookie: $SESSION"
 }
 
 get_lead_uuid() {
