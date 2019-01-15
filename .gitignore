@@ -1,1 +1,4 @@
 .env
+personal/*
+!personal/.gitkeep
+.input_history

@@ -1,7 +1,5 @@
 #! /usr/local/bin/bash
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $dir/../config
-
 
 sql() {
     mycli -u "$DB_USERNAME" --pass "$DB_PASSWORD" -h "$DB_HOST" -D "$DB_DATABASE" -e "$1"
@@ -72,19 +70,8 @@ set_user_password_to_password() {
     sql "$CHANGE_PASSWORD_QUERY"
 }
 
-get_core_path() {
-    dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-    echo $dir;
-}
-
-get_root_path() {
-    dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/../ && pwd )"
-    echo $dir;
-}
-
 run() {
-    dir=$(get_root_path)
-    /usr/local/bin/bash $dir/$@
+    /usr/local/bin/bash $ROOT_DIRECTORY/$@
 }
 
 random_email() {
@@ -92,31 +79,49 @@ random_email() {
     echo "$EMAIL_BASE+$ID@govworks.com"
 }
 
-declare -A PRODUCTS
-#Products
-PRODUCTS[NEW_PASSPORT]=26a4caca-4a23-4330-91f7-48f6870e126e;
-PRODUCTS[PASSPORT_RENEWAL]=74d9a12f-5b7e-41d7-98bb-17c90140510c;
-PRODUCTS[CHILD_PASSPORT]=47ade3e3-a858-429f-8056-f14e1f643bc5;
-PRODUCTS[LOST_PASSPORT]=79107f86-17e4-4fb5-9433-140bf92863bf;
-PRODUCTS[DAMAGED_PASSPORT]=68503f3d-d5e0-409e-9417-f5a3d4521d48;
-PRODUCTS[NAME_CHANGE]=09e04608-1c94-4304-b950-7dde1e3e90e9;
-PRODUCTS[SECOND_PASSPORT]=ffb647e7-ef91-4483-ad67-e2299d79f31a;
-PRODUCTS[STOLEN_PASSPORT]=0c757ff5-5930-4352-bfb7-8e6a8054ded6;
+get_product() {
+    # $1 is the product
 
-declare -A OPTIONSPC
-#Expediting options PC
-OPTIONSPC[SAME_DAY]="f3952d48-c3ef-4544-993f-2e3e9d2ef8c9"
-OPTIONSPC[NEXT_DAY]="00a6bb18-b1bb-4f38-9afb-b27396c65821"
-OPTIONSPC[PRIORITY]="0f1596dd-16d8-4c99-ab11-89b07efb662e"
-OPTIONSPC[RUSH]="5bcfe733-806d-4f43-b41c-5c9cb78ad39c"
-OPTIONSPC[STANDARD]="e8e275d1-d370-4c00-af3e-2de7f3e29e68"
-OPTIONSPC[SMART]="4f8799a0-b1f1-4e51-ae2f-c968c1c8fbca"
+    declare -A PRODUCTS
+    #Products
+    PRODUCTS[NEW_PASSPORT]=26a4caca-4a23-4330-91f7-48f6870e126e;
+    PRODUCTS[PASSPORT_RENEWAL]=74d9a12f-5b7e-41d7-98bb-17c90140510c;
+    PRODUCTS[CHILD_PASSPORT]=47ade3e3-a858-429f-8056-f14e1f643bc5;
+    PRODUCTS[LOST_PASSPORT]=79107f86-17e4-4fb5-9433-140bf92863bf;
+    PRODUCTS[DAMAGED_PASSPORT]=68503f3d-d5e0-409e-9417-f5a3d4521d48;
+    PRODUCTS[NAME_CHANGE]=09e04608-1c94-4304-b950-7dde1e3e90e9;
+    PRODUCTS[SECOND_PASSPORT]=ffb647e7-ef91-4483-ad67-e2299d79f31a;
+    PRODUCTS[STOLEN_PASSPORT]=0c757ff5-5930-4352-bfb7-8e6a8054ded6;
 
-declare -A OPTIONSPR
-#Expediting options PR
-OPTIONSPR[SAME_DAY]="ed7a01e2-8beb-469a-957f-50ba064bf3a5"
-OPTIONSPR[NEXT_DAY]="b10f87b1-b056-46de-94ce-2f0fb5215e84"
-OPTIONSPR[PRIORITY]="8a3a2caa-ff20-4cea-9db7-3f58cac1bd4d"
-OPTIONSPR[RUSH]="f9c6fd6f-295a-4202-aabe-f82f318c4da9"
-OPTIONSPR[STANDARD]="aa260648-80a7-416f-8275-a21eeadd4e30"
-OPTIONSPR[SMART]="d26ac4ce-40be-460f-a185-a792ba659074"
+    echo ${PRODUCTS[$1]}
+}
+
+get_option_pc() {
+    # $1 is the option
+
+    declare -A OPTIONSPC
+    #Expediting options PC
+    OPTIONSPC[SAME_DAY]="f3952d48-c3ef-4544-993f-2e3e9d2ef8c9"
+    OPTIONSPC[NEXT_DAY]="00a6bb18-b1bb-4f38-9afb-b27396c65821"
+    OPTIONSPC[PRIORITY]="0f1596dd-16d8-4c99-ab11-89b07efb662e"
+    OPTIONSPC[RUSH]="5bcfe733-806d-4f43-b41c-5c9cb78ad39c"
+    OPTIONSPC[STANDARD]="e8e275d1-d370-4c00-af3e-2de7f3e29e68"
+    OPTIONSPC[SMART]="4f8799a0-b1f1-4e51-ae2f-c968c1c8fbca"
+
+    echo ${OPTIONSPC[$1]}
+}
+
+get_option_pr() {
+    # $1 is the option
+
+    declare -A OPTIONSPR
+    #Expediting options PR
+    OPTIONSPR[SAME_DAY]="ed7a01e2-8beb-469a-957f-50ba064bf3a5"
+    OPTIONSPR[NEXT_DAY]="b10f87b1-b056-46de-94ce-2f0fb5215e84"
+    OPTIONSPR[PRIORITY]="8a3a2caa-ff20-4cea-9db7-3f58cac1bd4d"
+    OPTIONSPR[RUSH]="f9c6fd6f-295a-4202-aabe-f82f318c4da9"
+    OPTIONSPR[STANDARD]="aa260648-80a7-416f-8275-a21eeadd4e30"
+    OPTIONSPR[SMART]="d26ac4ce-40be-460f-a185-a792ba659074"
+
+    echo ${OPTIONSPR[$1]}
+}

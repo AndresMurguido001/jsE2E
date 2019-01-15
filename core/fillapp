@@ -1,15 +1,10 @@
 #! /usr/local/bin/bash
 
-#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $dir/util
-
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
     set_name
-    dir=$(get_root_path)
-    PERSONAL_PROFILE=`envsubst <$dir/data/application-models/personal-profile.json`;
-    APPLICATION_DATA=`envsubst <$dir/data/application-models/$1.json`;
+    PERSONAL_PROFILE=`envsubst <$ROOT_DIRECTORY/data/application-models/personal-profile.json`;
+    APPLICATION_DATA=`envsubst <$ROOT_DIRECTORY/data/application-models/$1.json`;
 
     MODEL="{\"model\": {"$PERSONAL_PROFILE","$APPLICATION_DATA"}}"
 
@@ -26,7 +21,7 @@ get_user_order_product_type() {
 GET_TRAVELER_QUERY="SELECT travelers.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN travelers ON travelers.order_id = user_orders.order_id WHERE users.email = '$1' LIMIT 1 "
 TRAVELER_UUID=$( sql "$GET_TRAVELER_QUERY" | sed -n '1!p' | sed -E "s/\"//g")
 
-URL="https://api.dev.govworks.com/api/traveler/$TRAVELER_UUID/update/model"
+URL="$API_URL/traveler/$TRAVELER_UUID/update/model"
 
 # GET LOGIN COOKIE
 get_cookie $1
