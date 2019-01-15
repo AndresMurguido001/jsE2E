@@ -1,0 +1,47 @@
+#! /usr/local/bin/bash
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $dir/core/util
+
+# Escape sequence and resets
+ESC_SEQ="\x1b["
+RESET_ALL="${ESC_SEQ}0m"
+
+# Foreground colours
+FG_YELLOW="${ESC_SEQ}33;"
+
+# Font styles
+FS_BOLD="1m"
+
+get_user_info() {
+    # Argument 1 is user's email
+    GET_PRODUCT_TYPE_QUERY="SELECT users.first_name, users.last_name, products.subtype, orders.order_number, applications.status, applications.progress FROM users JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id JOIN products ON products.id = applications.product_id WHERE users.email = '$1'"
+    RESULT="$(sql "$GET_PRODUCT_TYPE_QUERY")"
+    USER_INFO=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
+}
+
+# CUSTOMER VARIABLES
+get_user_info "$1"
+
+USER_FIRST="$(cut -d ' ' -f1 <<< $USER_INFO)"
+USER_LAST="$(cut -d ' ' -f2 <<< $USER_INFO)"
+USER_NAME="$USER_FIRST $USER_LAST"
+USER_EMAIL="$1"
+USER_TYPE="$(cut -d ' ' -f3 <<< $USER_INFO)"
+USER_ORDER="$(cut -d ' ' -f4 <<< $USER_INFO)"
+USER_STATUS="$(cut -d ' ' -f5 <<< $USER_INFO)"
+USER_PROGRESS="$(cut -d ' ' -f6 <<< $USER_INFO)"
+
+# CUSTOMER STATUS
+echo -e "${FG_YELLOW}${FS_BOLD}------------ O R D E R  S T A T U S ------------"${RESET_ALL}
+echo
+echo
+echo "Name: $USER_NAME"
+echo "Email: $1"
+echo "Type: $USER_TYPE" 
+echo "Order: $USER_ORDER"
+echo "Status: $USER_STATUS"
+echo "Progress: $USER_PROGRESS%"
+echo
+echo
+echo -e "${FG_YELLOW}${FS_BOLD}------------------------------------------------"${RESET_ALL}
