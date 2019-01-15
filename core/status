@@ -1,8 +1,5 @@
 #! /usr/local/bin/bash
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $dir/core/util
-
 # Escape sequence and resets
 ESC_SEQ="\x1b["
 RESET_ALL="${ESC_SEQ}0m"
