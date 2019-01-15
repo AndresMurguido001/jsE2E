@@ -1,32 +1,19 @@
-echo "  __   _  _  ____  __   _  _   __  ____  __  __   __ _"
-echo " / _\ / )( \(_  _)/  \ ( \/ ) / _\(_  _)(  )/  \ (  ( \ "
-echo "/    \) \/ (  )( (  O )/ \/ \/    \ )(   )((  O )/    / "
-echo "\_/\_/\____/ (__) \__/ \_)(_/\_/\_/(__) (__)\__/ \_)__) "
-
-echo "Welcome to the automation suite."
-
 # This script is meant to be the entry point to any other script in the suite
 # It does a lot of important things, one of them being resolving paths and exposing them as variables to the other scripts
 # This way we avoid having to copy the import statement every time we want to make a new script
 # We also source all the util functions and export them so they're available to the other scripts without them having to import util in each one
-
-PROGRAM_TO_RUN=$@
 
 # Paths to the important directories
 ROOT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CORE_DIRECTORY="$ROOT_DIRECTORY/core"
 PERSONAL_DIRECTORY="$ROOT_DIRECTORY/personal"
 
-echo "Root: $ROOT_DIRECTORY"
-echo "Core: $CORE_DIRECTORY"
-echo "Personal: $PERSONAL_DIRECTORY"
-
-# Get the env variables
+# Export ENV variables
 set -o allexport;
 source .env;
 set +o allexport
 
-# Util functions
+# Export Util functions
 set -o allexport
 source $CORE_DIRECTORY/util
 set +o allexport
@@ -36,12 +23,63 @@ export ROOT_DIRECTORY
 export CORE_DIRECTORY
 export PERSONAL_DIRECTORY
 
-# Run the program
+# If we get passed an argument we assume it's the program to run, we run it and exit
+# If we don't get an argument we continue to the interactive
+if [[ "$@" != "" ]]
+then
+    /usr/local/bin/bash $ROOT_DIRECTORY/$@
+    exit 0
+fi
 
-echo # Echo empty line to start
-echo "Running: $@"
-echo
-/usr/local/bin/bash $ROOT_DIRECTORY/$@
-echo
-echo "Execution Finished"
-echo # Echo empty linke to end
+# Interactive Prompt
+print_heading() {
+    echo -e -n "\e[0;32m"
+    echo "  __   _  _  ____  __   _  _   __  ____  __  __   __ _"
+    echo " / _\ / )( \(_  _)/  \ ( \/ ) / _\(_  _)(  )/  \ (  ( \ "
+    echo "/    \) \/ (  )( (  O )/ \/ \/    \ )(   )((  O )/    / "
+    echo "\_/\_/\____/ (__) \__/ \_)(_/\_/\_/(__) (__)\__/ \_)__) "
+    echo -e "\e[0m"
+    echo "Welcome to the automation suite."
+    echo "Root: $ROOT_DIRECTORY"
+    echo "Core: $CORE_DIRECTORY"
+    echo "Personal: $PERSONAL_DIRECTORY"
+    echo -e "\e[0;32m________________________________________________________________\e[0m"
+    echo # Separate all the intro text from the rest of the program
+}
+
+# Prompt Settings
+PROMPT="automation"
+
+clear
+print_heading
+# Run the program
+history -r .input_history # Set up to be able to use history
+set -o vi # Set up vi keybinds to be able to use up and down arrows for history
+while [ true ]
+do
+
+    read -e -p "@$PROMPT: " COMMAND
+    history -s "$COMMAND" # Save command to history
+
+    if [[ "$COMMAND" == "exit" ]] 
+    then 
+        break 
+    fi
+
+    if [[ "$COMMAND" == "clear" ]]
+    then
+        clear
+        print_heading
+        continue
+    fi
+
+    echo # Echo empty line to start
+    echo -e "\033[0;35mRunning: $COMMAND\033[0m"
+    echo
+    /usr/local/bin/bash $ROOT_DIRECTORY/$COMMAND
+    echo
+    echo -e "\033[0;35mExecution Finished\033[0m"
+    echo # Echo empty linke to end
+done
+echo 
+history -w .input_history
