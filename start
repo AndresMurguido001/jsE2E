@@ -31,8 +31,6 @@ set -o allexport
 source $CORE_DIRECTORY/util
 set +o allexport
 
-#TODO Figure out how to export product and options array or change the mechanism completely
-
 # Export all the variables
 export ROOT_DIRECTORY
 export CORE_DIRECTORY
@@ -44,4 +42,6 @@ echo # Echo empty line to start
 echo "Running: $@"
 echo
 /usr/local/bin/bash $ROOT_DIRECTORY/$@
+echo
+echo "Execution Finished"
 echo # Echo empty linke to end
