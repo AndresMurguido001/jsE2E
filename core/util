@@ -71,8 +71,7 @@ set_user_password_to_password() {
 }
 
 run() {
-    dir=$(get_root_path)
-    /usr/local/bin/bash $dir/$@
+    /usr/local/bin/bash $ROOT_DIRECTORY/$@
 }
 
 random_email() {

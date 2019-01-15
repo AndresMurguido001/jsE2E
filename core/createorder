@@ -1,20 +1,16 @@
 #! /usr/local/bin/bash
 
-#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $dir/util
-
 #TODO add check for bash version since this program requires bash 4 for the associative arrays
 ORDER_URL="$API_URL/order/create"
 
-PRODUCT=${PRODUCTS[$1]};
+PRODUCT="$(get_product $1)"
 
-if [[ -z "$4" || "$4" == 'passportcenter' ]]; #If the 4th parameter is empty or is passportcenter
+if [[ -z "$4" || "$4" == "passportcenter" ]] #If the 4th parameter is empty or is passportcenter
 then
-    OPTION=${OPTIONSPC[$2]};
-    SOURCE='passportcenter';
+    OPTION="$(get_option_pc $2)"
+    SOURCE='passportcenter'
 else #Right now you could just pass anything as the second parameter and the source will be set to passportrenewal lol
-    OPTION=${OPTIONSPR[$2]};
+    OPTION="$(get_option_pr $2)";
     SOURCE='passportrenewal';
 fi
 

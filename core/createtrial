@@ -1,9 +1,5 @@
 #! /usr/local/bin/bash
 
-#Import the utility functions and data. This is done so it's loaded relative to the path of the script as opposed to whatever the CWD is
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $dir/util
-
 # product option email source
 email="$([ $3 ] && echo $3 || echo "$(random_email)")"
 run core/createlead $1 $2 $email $4
