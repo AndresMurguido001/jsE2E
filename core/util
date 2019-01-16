@@ -92,7 +92,7 @@ get_option() {
     # $2 is the option
     DATA="$(curl --silent --insecure $API_URL/domains/$1/options)"
     OPTION="$2_service"
-    UUID="$(node -e "console.log( JSON.parse('$DATA').data.options.find(obj => obj.internal='$OPTION').options_uuid );")"
+    UUID="$(node -e "console.log( JSON.parse('$DATA').data.options.find(obj => obj.internal=='$OPTION').options_uuid );")"
     
     echo "$UUID"
 }
