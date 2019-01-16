@@ -1,111 +1,109 @@
-{
-    "social_security": {
-        "version" : 1000000,
-          "value": "123456789"
-      },
-      "issued_passports": {
-        "version": 100000,
-        "value": "book"
-    },
-      "emergency_contact" : {
-        "answer" : {
-          "version" : 100000,
-          "value" : "no"
-        }
-      },
-      "divorced_widowed": {
-        "answer": {
-            "version": 100000,
-            "value": "no"
-        }
-    },
-    "employment_status": {
-      "answer": {
-          "version": 1000000,
-          "value": "no"
-      }
+"social_security": {
+  "version": 1000000,
+  "value": "123456789"
+},
+"issued_passports": {
+  "version": 100000,
+  "value": "book"
+},
+"emergency_contact": {
+  "answer": {
+    "version": 100000,
+    "value": "no"
+  }
+},
+"divorced_widowed": {
+  "answer": {
+    "version": 100000,
+    "value": "no"
+  }
+},
+"employment_status": {
+  "answer": {
+    "version": 1000000,
+    "value": "no"
+  }
+},
+"passport": {
+  "number": {
+    "version": 100000,
+    "value": "838913489"
   },
-      "passport" : {
-        "number": {
-          "version": 100000,
-          "value": "838913489"
-      },
-      "first_middle": {
-          "version": 100000,
-          "value": "$FIRSTNAME $MIDDLE_NAME"
-      },
-      "last": {
-          "version": 100000,
-          "value": "$LASTNAME"
-      },
-      "issue_date": {
-          "version": 100000,
-          "value": "10/10/2018"
-      },
-      "in_possession": {
-          "version": 100000,
-          "value": "stolen"
-      },
-      "not_in_possession": {
-          "issue_date_available": {
-              "version": 100000,
-              "value": "yes"
-          }
-      },
-      "is_damaged": {
-          "version": 100000,
-          "value": "no"
-      }
-      },
-      "father" : {
-        "unknown" : {
-          "version" : 100000,
-          "value" : "yes"
-        }
-      },
-      "frequent_traveler" : {
-        "version" : 100000,
-        "value" : "no"
-      },
-      "photo_location" : {
-        "value" : {
-          "zip" : "27838",
-          "facility" : null
-        },
-        "version" : 100000
-      },
-      "lost_passport" : {
-        "other" : {
-          "answer" : {
-            "version" : 100000,
-            "value" : "no"
-          }
-        },
-        "book" : {
-          "how" : {
-            "version" : 100000,
-            "value": "I lost it in a JSON file"
-          },
-          "when": {
-            "version": 100000,
-            "value": "$WHEN"
-        },
-          "where" : {
-            "version" : 100000,
-            "value" : "Miami, FL"
-          }
-        }
-      },
-      "married" : {
-        "answer" : {
-          "version" : 100000,
-          "value" : "no"
-        }
-      },
-      "mother" : {
-        "unknown" : {
-          "version" : 100000,
-          "value" : "yes"
-        }
-      }
+  "first_middle": {
+    "version": 100000,
+    "value": "$FIRSTNAME $MIDDLE_NAME"
+  },
+  "last": {
+    "version": 100000,
+    "value": "$LASTNAME"
+  },
+  "issue_date": {
+    "version": 100000,
+    "value": "10/10/2018"
+  },
+  "in_possession": {
+    "version": 100000,
+    "value": "stolen"
+  },
+  "not_in_possession": {
+    "issue_date_available": {
+      "version": 100000,
+      "value": "yes"
     }
+  },
+  "is_damaged": {
+    "version": 100000,
+    "value": "no"
+  }
+},
+"father": {
+  "unknown": {
+    "version": 100000,
+    "value": "yes"
+  }
+},
+"frequent_traveler": {
+  "version": 100000,
+  "value": "no"
+},
+"photo_location": {
+  "value": {
+    "zip": "27838",
+    "facility": null
+  },
+  "version": 100000
+},
+"lost_passport": {
+  "other": {
+    "answer": {
+      "version": 100000,
+      "value": "no"
+    }
+  },
+  "book": {
+    "how": {
+      "version": 100000,
+      "value": "I lost it in a JSON file"
+    },
+    "when": {
+      "version": 100000,
+      "value": "01/01/2019"
+    },
+    "where": {
+      "version": 100000,
+      "value": "Miami, FL"
+    }
+  }
+},
+"married": {
+  "answer": {
+    "version": 100000,
+    "value": "no"
+  }
+},
+"mother": {
+  "unknown": {
+    "version": 100000,
+    "value": "yes"
+  }
+}
