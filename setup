@@ -1,0 +1,72 @@
+# This script will check if a dependency is already installed and install any missing ones
+
+# Check if a program is installed
+is_installed() {
+    which $1 > /dev/null
+    echo "$?"
+}
+
+# Check bash version and upgrade if necessary
+check_bash_version() {
+    echo
+    echo "______________________________________________"
+    echo
+    VERSION="$(cut -d'.' -f1 <<< "$BASH_VERSION")"
+    if [[ "$VERSION" != "4" ]]
+    then
+        echo "Bash version too low. Upgrading to bash 4"
+
+        brew update && brew install bash
+        # Add the new shell to the list of allowed shells
+        sudo bash -c 'echo /usr/local/bin/bash >> /etc/shells'
+        # Change to the new shell
+        chsh -s /usr/local/bin/bash 
+    else
+        echo "Bash is already version 4"
+    fi
+}
+
+# Installation functions for the different dependencies
+install_brew() {
+    echo "Installing homebrew..."
+    echo
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+}
+
+install_mycli() {
+    echo "Installing mycli..."
+    echo
+    brew update && brew install mycli
+}
+
+install_gettext() {
+    echo "Installing gettext..."
+    echo
+    brew install gettext
+    brew link --force gettext
+}
+
+# First check the bash version
+check_bash_version
+
+DEPENDENCIES=(brew mycli gettext)
+
+echo
+echo "______________________________________________"
+echo
+for dep in "${DEPENDENCIES[@]}"
+do
+    INSTALLED="$(is_installed $dep)"
+
+    if [[ "$INSTALLED" == "1" ]]
+    then
+        echo "$dep not installed. Resolving..."
+        FUNCTION="install_$dep"
+        $FUNCTION
+    else
+        echo "$dep is already installed"
+    fi
+    echo
+    echo "______________________________________________"
+    echo
+done
