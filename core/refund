@@ -1,0 +1,59 @@
+#! /usr/local/bin/bash
+
+# EMAIL="$([ $3 ] && echo $3 || echo "$(random_email)")"
+
+# GET ADMIN LOGIN COOKIE
+get_cookie admin
+
+# GET ORDER NUMBER
+get_user_info() {
+    # Argument 1 is user's email
+    GET_USER_INFO_QUERY="SELECT orders.order_number FROM users  JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id  WHERE email = '$1'"
+    RESULT="$(sql "$GET_USER_INFO_QUERY")"
+    ORDER_NUMBER=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
+    echo "user info $ORDER_NUMBER" # DELETE
+}
+
+get_refund_info() {
+    # Argument 1 is user's email
+    GET_USER_INFO_QUERY="SELECT refunds.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN orders ON orders.id = user_orders.order_id JOIN refunds ON refunds.order_id = user_orders.order_id WHERE users.email = '$1'"
+    RESULT="$(sql "$GET_USER_INFO_QUERY")"
+    REFUND_UUID=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
+    echo "user info $REFUND_UUID" # DELETE
+}
+
+authorize_refund() {
+    # Authorizes the refund, and decides how the user is going to be refunded
+    AUTHORIZE_URL="$API_URL/refunds/$REFUND_UUID/cancel/call"
+    get_refund_info "$2"
+
+    api_call "$AUTHORIZE_URL" '{"action":"full_refund","check_number":null,"email":true,"voucher":false,"refund_amount":158.9,"refund_method":"card","type":"void","shipping":false,"fee":0}'
+}
+
+request_refund() {
+    # Sends the initial request for refund email to user, but does not refund
+    REFUND_URL="$API_URL/order/cancel/call"
+    get_user_info "$2"
+
+    api_call "$REFUND_URL" '{"order_number":"'$USER_INFO'","email":"'$2'"}'
+}
+
+case $1 in 
+    r )
+        echo "Request Refund"
+        request_refund "$2"
+        ;;
+    ar ) 
+        echo "Authorize Refund with Random Values"
+        authorize_refund "$2"
+        ;;
+    rar ) 
+        echo "Request Refund & Authorize Refund with Default Params"
+        request_refund "$2"
+        authorize_refund "$2"
+        ;;
+    * ) 
+        echo "Invalid Argument: You need to pass -R to request a refund, or -RA to request a refund and authorize"
+        ;;
+esac
+
