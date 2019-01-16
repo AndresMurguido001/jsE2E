@@ -3,29 +3,30 @@
 # EMAIL="$([ $3 ] && echo $3 || echo "$(random_email)")"
 
 # GET ADMIN LOGIN COOKIE
-get_cookie admin
+get_cookie "admin"
 
 # GET ORDER NUMBER
 get_user_info() {
     # Argument 1 is user's email
     GET_USER_INFO_QUERY="SELECT orders.order_number FROM users  JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id  WHERE email = '$1'"
     RESULT="$(sql "$GET_USER_INFO_QUERY")"
-    ORDER_NUMBER=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
-    echo "user info $ORDER_NUMBER" # DELETE
+    ORDER_NUMBER="$(remove_first_line_from_sql_output "$RESULT")"
+    echo "$ORDER_NUMBER"
 }
 
 get_refund_info() {
     # Argument 1 is user's email
-    GET_USER_INFO_QUERY="SELECT refunds.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN orders ON orders.id = user_orders.order_id JOIN refunds ON refunds.order_id = user_orders.order_id WHERE users.email = '$1'"
-    RESULT="$(sql "$GET_USER_INFO_QUERY")"
+    GET_REFUND_INFO_QUERY="SELECT refunds.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN orders ON orders.id = user_orders.order_id JOIN refunds ON refunds.order_id = user_orders.order_id WHERE users.email = '$1'"
+    RESULT="$(sql "$GET_REFUND_INFO_QUERY")"
+    echo "$RESULT"
     REFUND_UUID=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
-    echo "user info $REFUND_UUID" # DELETE
+    echo "$REFUND_UUID"
 }
 
 authorize_refund() {
     # Authorizes the refund, and decides how the user is going to be refunded
+    REFUND_UUID="$(get_refund_info "$1")"
     AUTHORIZE_URL="$API_URL/refunds/$REFUND_UUID/cancel/call"
-    get_refund_info "$2"
 
     api_call "$AUTHORIZE_URL" '{"action":"full_refund","check_number":null,"email":true,"voucher":false,"refund_amount":158.9,"refund_method":"card","type":"void","shipping":false,"fee":0}'
 }
@@ -33,9 +34,11 @@ authorize_refund() {
 request_refund() {
     # Sends the initial request for refund email to user, but does not refund
     REFUND_URL="$API_URL/order/cancel/call"
-    get_user_info "$2"
-
-    api_call "$REFUND_URL" '{"order_number":"'$USER_INFO'","email":"'$2'"}'
+    ORDER_NUMBER="$(get_user_info "$1")"
+    echo "ORDER #: $ORDER_NUMBER"
+    PAYLOAD="'"{"order_number":"'$ORDER_NUMBER'","email":"'$1'"}"'"
+    echo "$PAYLOAD"
+    api_call "$REFUND_URL" "$PAYLOAD"
 }
 
 case $1 in 

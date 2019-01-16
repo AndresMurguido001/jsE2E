@@ -15,7 +15,7 @@ api_call() {
     #Parameter 3 is optional and it's the method
     METHOD=$([ $3 ] && echo $3 || echo POST)\
     
-    curl --silent --output /dev/null "$1" \
+    curl "$1" \
     -H 'Accept: application/json, text/plain, */*' \
     -H 'Referer: https://dev.passportcenter.com/checkout/step4' \
     -H 'Origin: https://dev.passportcenter.com' \
@@ -23,7 +23,6 @@ api_call() {
     -H 'Content-Type: application/json;charset=UTF-8' \
     --cookie "$COOKIE" \
     -X "$METHOD" \
-    --write-out "Api Call: $METHOD $1 %{http_code}\n" \
     --data-binary $"$2" --compressed
 }
 
