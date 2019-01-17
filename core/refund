@@ -22,13 +22,46 @@ get_refund_info() {
     echo "$REFUND_UUID"
 }
 
-authorize_refund() {
+authorize_refund_random() {
     # Authorizes the refund, and decides how the user is going to be refunded
     REFUND_UUID="$(get_refund_info "$1")"
     AUTHORIZE_URL="$API_URL/refunds/$REFUND_UUID/action"
-    echo "REFUND UUID IS: $REFUND_UUID"
+    # Arrays to choose from randomly
+    REFUND_METHODS=("check" "card")
+    REFUND_ACTIONS=("no_refund" "partial_refund" "full_refund")
+    REFUND_TYPES=("void" "refund")
 
-    api_call "$AUTHORIZE_URL" '{"action":"full_refund","check_number":null,"email":true,"voucher":false,"refund_amount":158.9,"refund_method":"card","type":"void","shipping":false,"fee":0}'
+    # Random values for the payload
+    REFUND_METHOD=${REFUND_METHODS[$RANDOM % ${#REFUND_METHODS[@]} ]}
+    REFUND_ACTION=${REFUND_ACTIONS[$RANDOM % ${#REFUND_ACTIONS[@]} ]}
+    REFUND_TYPE=${REFUND_TYPES[$RANDOM % ${#REFUND_TYPES[@]} ]}
+
+    echo "Doing a $REFUND_ACTION on $REFUND_METHOD for user $1"
+
+    PAYLOAD='{"action":"'$REFUND_ACTION'","check_number":"39849234","email":false,"voucher":false,"refund_amount":20.9,"refund_method":"'$REFUND_METHOD'","type":"void","shipping":false,"fee":0}'
+
+    api_call "$AUTHORIZE_URL" "$PAYLOAD"
+}
+
+authorize_refund() {
+    # $1 is refund method
+    # $2 is refund action
+    # $3 is refund type
+
+    # Authorizes the refund, and decides how the user is going to be refunded
+    REFUND_UUID="$(get_refund_info "$1")"
+    AUTHORIZE_URL="$API_URL/refunds/$REFUND_UUID/action"
+    
+    # Random values for the payload
+    REFUND_METHOD="$1"
+    REFUND_ACTION="$2"
+    REFUND_TYPE="$3"
+
+    echo "Doing a $REFUND_ACTION on $REFUND_METHOD for user $1"
+
+    PAYLOAD='{"action":"'$REFUND_ACTION'","check_number":"39849234","email":false,"voucher":false,"refund_amount":20.9,"refund_method":"'$REFUND_METHOD'","type":"void","shipping":false,"fee":0}'
+
+    api_call "$AUTHORIZE_URL" "$PAYLOAD"
 }
 
 request_refund() {
@@ -37,7 +70,6 @@ request_refund() {
     ORDER_NUMBER="$(get_user_info "$1")"
     echo "ORDER #: $ORDER_NUMBER"
     PAYLOAD='{"order_number":"'$ORDER_NUMBER'","email":"'$1'"}'
-    echo "$PAYLOAD"
     api_call "$REFUND_URL" "$PAYLOAD"
 }
 
@@ -46,14 +78,18 @@ case $1 in
         echo "Request Refund"
         request_refund "$2"
         ;;
+    a )
+        echo "Authorize Refund: $3 $4 $5"
+        authorize_refund "$2" "$3" "$4" "$5"
+        ;;
     ar ) 
         echo "Authorize Refund with Random Values"
-        authorize_refund "$2"
+        authorize_refund_random "$2"
         ;;
     rar ) 
-        echo "Request Refund & Authorize Refund with Default Params"
+        echo "Request Refund & Authorize Refund with Random Params"
         request_refund "$2"
-        authorize_refund "$2"
+        authorize_refund_random "$2"
         ;;
     * ) 
         echo "Invalid Argument: You need to pass -R to request a refund, or -RA to request a refund and authorize"

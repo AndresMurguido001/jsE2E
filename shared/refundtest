@@ -1,0 +1,5 @@
+EMAIL="$(random_email)"
+echo "USING EMAIL: $EMAIL"
+
+run core/createorder 'new-passport' 'rush' "$EMAIL"
+run core/refund rar "$EMAIL"
