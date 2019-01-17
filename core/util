@@ -15,7 +15,10 @@ api_call() {
     #Parameter 3 is optional and it's the method
     METHOD=$([ $3 ] && echo $3 || echo POST)\
     
-    curl --insecure --silent --output /dev/null "$1" \
+    curl "$1" \
+    --insecure \
+    --silent \
+    --output /dev/null \
     -H 'Accept: application/json, text/plain, */*' \
     -H 'Referer: https://dev.passportcenter.com/checkout/step4' \
     -H 'Origin: https://dev.passportcenter.com' \
@@ -28,9 +31,16 @@ api_call() {
 }
 
 get_cookie() {
-    SESSION=$(login '{"email": "'$1'", "password": "'$PASSWORD'"}' | grep set-cookie: | awk '{print $2}')
-    COOKIE=$SESSION
-    echo "Login Cookie: $SESSION"
+    if [[ "$1" == "admin" ]]
+    then
+        SESSION=$(login '{"email": "'$ADMIN_EMAIL'", "password": "'$ADMIN_PASS'"}' | grep set-cookie: | awk '{print $2}')
+        COOKIE=$SESSION
+        echo "Admin Login Cookie: $SESSION"
+    else
+        SESSION=$(login '{"email": "'$1'", "password": "'$PASSWORD'"}' | grep set-cookie: | awk '{print $2}')
+        COOKIE=$SESSION
+        echo "Login Cookie: $SESSION"
+    fi
 }
 
 get_lead_uuid() {

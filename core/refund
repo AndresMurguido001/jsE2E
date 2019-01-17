@@ -1,0 +1,98 @@
+#! /usr/local/bin/bash
+
+# EMAIL="$([ $3 ] && echo $3 || echo "$(random_email)")"
+
+# GET ADMIN LOGIN COOKIE
+get_cookie "admin"
+
+# GET ORDER NUMBER
+get_user_info() {
+    # Argument 1 is user's email
+    GET_USER_INFO_QUERY="SELECT orders.order_number FROM users  JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id  WHERE email = '$1'"
+    RESULT="$(sql "$GET_USER_INFO_QUERY")"
+    ORDER_NUMBER="$(remove_first_line_from_sql_output "$RESULT")"
+    echo "$ORDER_NUMBER"
+}
+
+get_refund_info() {
+    # Argument 1 is user's email
+    GET_REFUND_INFO_QUERY="SELECT refunds.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN orders ON orders.id = user_orders.order_id JOIN refunds ON refunds.order_id = user_orders.order_id WHERE users.email = '$1'"
+    RESULT="$(sql "$GET_REFUND_INFO_QUERY")"
+    REFUND_UUID=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
+    echo "$REFUND_UUID"
+}
+
+authorize_refund_random() {
+    # Authorizes the refund, and decides how the user is going to be refunded
+    REFUND_UUID="$(get_refund_info "$1")"
+    AUTHORIZE_URL="$API_URL/refunds/$REFUND_UUID/action"
+    # Arrays to choose from randomly
+    REFUND_METHODS=("check" "card")
+    REFUND_ACTIONS=("no_refund" "partial_refund" "full_refund")
+    REFUND_TYPES=("void" "refund")
+
+    # Random values for the payload
+    REFUND_METHOD=${REFUND_METHODS[$RANDOM % ${#REFUND_METHODS[@]} ]}
+    REFUND_ACTION=${REFUND_ACTIONS[$RANDOM % ${#REFUND_ACTIONS[@]} ]}
+    REFUND_TYPE=${REFUND_TYPES[$RANDOM % ${#REFUND_TYPES[@]} ]}
+
+    echo "Doing a $REFUND_ACTION on $REFUND_METHOD for user $1"
+
+    PAYLOAD='{"action":"'$REFUND_ACTION'","check_number":"39849234","email":false,"voucher":false,"refund_amount":20.9,"refund_method":"'$REFUND_METHOD'","type":"void","shipping":false,"fee":0}'
+
+    api_call "$AUTHORIZE_URL" "$PAYLOAD"
+}
+
+authorize_refund() {
+    # $1 is refund method
+    # $2 is refund action
+    # $3 is refund type
+
+    # Authorizes the refund, and decides how the user is going to be refunded
+    REFUND_UUID="$(get_refund_info "$1")"
+    AUTHORIZE_URL="$API_URL/refunds/$REFUND_UUID/action"
+    
+    # Random values for the payload
+    REFUND_METHOD="$1"
+    REFUND_ACTION="$2"
+    REFUND_TYPE="$3"
+
+    echo "Doing a $REFUND_ACTION on $REFUND_METHOD for user $1"
+
+    PAYLOAD='{"action":"'$REFUND_ACTION'","check_number":"39849234","email":false,"voucher":false,"refund_amount":20.9,"refund_method":"'$REFUND_METHOD'","type":"void","shipping":false,"fee":0}'
+
+    api_call "$AUTHORIZE_URL" "$PAYLOAD"
+}
+
+request_refund() {
+    # Sends the initial request for refund email to user, but does not refund
+    REFUND_URL="$API_URL/order/cancel/call"
+    ORDER_NUMBER="$(get_user_info "$1")"
+    echo "ORDER #: $ORDER_NUMBER"
+    PAYLOAD='{"order_number":"'$ORDER_NUMBER'","email":"'$1'"}'
+    api_call "$REFUND_URL" "$PAYLOAD"
+}
+
+case $1 in 
+    r )
+        echo "Request Refund"
+        request_refund "$2"
+        ;;
+    a )
+        echo "Authorize Refund: $3 $4 $5"
+        authorize_refund "$2" "$3" "$4" "$5"
+        ;;
+    ar ) 
+        echo "Authorize Refund with Random Values"
+        authorize_refund_random "$2"
+        ;;
+    rar ) 
+        echo "Request Refund & Authorize Refund with Random Params"
+        request_refund "$2"
+        authorize_refund_random "$2"
+        ;;
+    * ) 
+        echo "Invalid Argument: You need to pass -R to request a refund, or -RA to request a refund and authorize"
+        ;;
+esac
+
