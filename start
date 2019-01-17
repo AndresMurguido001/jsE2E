@@ -47,6 +47,27 @@ print_heading() {
     echo # Separate all the intro text from the rest of the program
 }
 
+get_script_usage() {
+    # $1 is the name of the script. Ex: core/fillapp
+
+    PARAMETER_LINE="$(grep "# Parameters:" $ROOT_DIRECTORY/$1)"
+    echo "${PARAMETER_LINE/'# Parameters:'/}"
+}
+
+help() {
+    echo
+    # First list all available commands
+    echo "Available commands"
+    echo
+    # List commands in core
+    for file in core/*; do echo "$file$(get_script_usage $file)"; done
+    # List commands in shared
+    for file in shared/*; do echo "$file"; done
+    # List commands in personal
+    for file in personal/*; do echo "$file"; done
+    echo
+}
+
 # Prompt Settings
 PROMPT="automation"
 
@@ -70,6 +91,12 @@ do
     then
         clear
         print_heading
+        continue
+    fi
+
+    if [[ "$COMMAND" == "help" ]]
+    then
+        help
         continue
     fi
 
