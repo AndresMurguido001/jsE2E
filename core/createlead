@@ -16,6 +16,9 @@ else #Right now you could just pass anything as the second parameter and the sou
     SOURCE='passportrenewal';
 fi
 
+echo "Createlead: Product is: $PRODUCT"
+echo "Createlead: Option is: $OPTION"
+
 EMAIL=$3
 set_name
 echo "Create Lead: Creating a $2 $1 lead on $SOURCE under the email $3 for $FIRSTNAME"
