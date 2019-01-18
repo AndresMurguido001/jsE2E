@@ -3,26 +3,6 @@
 # This way we avoid having to copy the import statement every time we want to make a new script
 # We also source all the util functions and export them so they're available to the other scripts without them having to import util in each one
 
-# Paths to the important directories
-ROOT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-CORE_DIRECTORY="$ROOT_DIRECTORY/core"
-PERSONAL_DIRECTORY="$ROOT_DIRECTORY/personal"
-
-# Export ENV variables
-set -o allexport;
-source .env;
-set +o allexport
-
-# Export Util functions
-set -o allexport
-source $CORE_DIRECTORY/util
-set +o allexport
-
-# Export all the variables
-export ROOT_DIRECTORY
-export CORE_DIRECTORY
-export PERSONAL_DIRECTORY
-
 # If we get passed an argument we assume it's the program to run, we run it and exit
 # If we don't get an argument we continue to the interactive
 if [[ "$@" != "" ]]
@@ -41,10 +21,43 @@ print_heading() {
     echo -e "\e[0m"
     echo "Welcome to the automation suite."
     echo "Root: $ROOT_DIRECTORY"
-    echo "Core: $CORE_DIRECTORY"
-    echo "Personal: $PERSONAL_DIRECTORY"
+    echo "Environment: $ENVIRONMENT"
+    echo "DB_HOST: $DB_HOST | API_URL: $API_URL"
     echo -e "\e[0;32m________________________________________________________________\e[0m"
     echo # Separate all the intro text from the rest of the program
+}
+
+# Loads environment variables and util functions
+load_dependencies() {
+    # Paths to the important directories
+    ROOT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    CORE_DIRECTORY="$ROOT_DIRECTORY/core"
+    PERSONAL_DIRECTORY="$ROOT_DIRECTORY/personal"
+
+    # Export ENV variables
+    set -o allexport;
+    source .env;
+    set +o allexport
+
+    # Export ENV variables for the chosen environment
+    set -o allexport;
+    source .env.$ENVIRONMENT;
+    set +o allexport
+
+    # Export Util functions
+    set -o allexport
+    source $CORE_DIRECTORY/util
+    set +o allexport
+
+    # Export all the variables
+    export ROOT_DIRECTORY
+    export CORE_DIRECTORY
+    export PERSONAL_DIRECTORY
+}
+
+switch_env() {
+    # $1 is the environment to switch to
+    sed -i '' -e "s/ENVIRONMENT=.*/ENVIRONMENT=$1/g" .env
 }
 
 get_script_usage() {
@@ -56,8 +69,16 @@ get_script_usage() {
 
 help() {
     echo
+    echo "Available Commands"
+    echo
+    echo "switchenv <environment> : loads the variables from your .env and .env.<environment>"
+    echo "reload : reloads all env variables and dependencies"
+    echo "help : this help menu"
+    echo "clear | clear the screen"
+    echo "exit : exit this prompt"
+    echo
     # First list all available commands
-    echo "Available commands"
+    echo "Available Scripts"
     echo
     # List commands in core
     for file in core/*; do echo "$file$(get_script_usage $file)"; done
@@ -71,9 +92,12 @@ help() {
 # Prompt Settings
 PROMPT="automation"
 
+# What to do when the program begins
 clear
+load_dependencies
 print_heading
-# Run the program
+
+# Run the chosen script
 history -r .input_history # Set up to be able to use history
 set -o vi # Set up vi keybinds to be able to use up and down arrows for history
 while [ true ]
@@ -82,31 +106,38 @@ do
     read -e -p "@$PROMPT: " COMMAND
     history -s "$COMMAND" # Save command to history
 
-    if [[ "$COMMAND" == "exit" ]] 
-    then 
-        break 
-    fi
+    case $COMMAND in
+        exit )
+            break
+            ;;
+        clear )
+            clear
+            print_heading
+            continue
+            ;;
+        help )
+            help
+            continue
+            ;;
+        switchenv* )
+            ENV="$(echo "$COMMAND" | cut -d' ' -f2)"
+            echo "Switching Environment to: $ENV"
+            switch_env $ENV
+            load_dependencies
+            clear
+            print_heading
+            ;;
+        * )
+            echo # Echo empty line to start
+            echo -e "\033[0;35mRunning: $COMMAND\033[0m"
+            echo
+            /usr/local/bin/bash $ROOT_DIRECTORY/$COMMAND
+            echo
+            echo -e "\033[0;35mExecution Finished\033[0m"
+            echo # Echo empty linke to end
+        esac
 
-    if [[ "$COMMAND" == "clear" ]]
-    then
-        clear
-        print_heading
-        continue
-    fi
-
-    if [[ "$COMMAND" == "help" ]]
-    then
-        help
-        continue
-    fi
-
-    echo # Echo empty line to start
-    echo -e "\033[0;35mRunning: $COMMAND\033[0m"
-    echo
-    /usr/local/bin/bash $ROOT_DIRECTORY/$COMMAND
-    echo
-    echo -e "\033[0;35mExecution Finished\033[0m"
-    echo # Echo empty linke to end
+    
 done
 echo 
 history -w .input_history
