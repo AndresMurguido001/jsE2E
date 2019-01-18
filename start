@@ -13,6 +13,11 @@ set -o allexport;
 source .env;
 set +o allexport
 
+# Export ENV variables for the chosen environment
+set -o allexport;
+source .env.$ENVIRONMENT;
+set +o allexport
+
 # Export Util functions
 set -o allexport
 source $CORE_DIRECTORY/util
@@ -41,8 +46,8 @@ print_heading() {
     echo -e "\e[0m"
     echo "Welcome to the automation suite."
     echo "Root: $ROOT_DIRECTORY"
-    echo "Core: $CORE_DIRECTORY"
-    echo "Personal: $PERSONAL_DIRECTORY"
+    echo "Environment: $ENVIRONMENT"
+    echo "DB_HOST: $DB_HOST | API_URL: $API_URL"
     echo -e "\e[0;32m________________________________________________________________\e[0m"
     echo # Separate all the intro text from the rest of the program
 }
