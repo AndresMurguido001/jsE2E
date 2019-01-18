@@ -33,14 +33,19 @@ api_call() {
 get_cookie() {
     if [[ "$1" == "admin" ]]
     then
-        SESSION=$(login '{"email": "'$ADMIN_EMAIL'", "password": "'$ADMIN_PASS'"}' | grep set-cookie: | awk '{print $2}')
-        COOKIE=$SESSION
-        echo "Admin Login Cookie: $SESSION"
+        EMAIL="$ADMIN_EMAIL"
+        PASSWORD="$ADMIN_PASS" # Password coming from .env
     else
-        SESSION=$(login '{"email": "'$1'", "password": "'$PASSWORD'"}' | grep set-cookie: | awk '{print $2}')
-        COOKIE=$SESSION
-        echo "Login Cookie: $SESSION"
+        EMAIL="$1"
+        PASSWORD="$PASSWORD" # Password coming from .env
     fi
+    
+    echo "Attempting login with these credentials: $EMAIL $PASSWORD"
+    COOKIE_HEADER="$(login '{"email": "'$EMAIL'", "password": "'$PASSWORD'"}' | grep gov_api_session | tr ';' '\n' | grep gov_api_session)"
+    SESSION=${COOKIE_HEADER/Set-Cookie: /} # Substitute Set-Cookie for empty
+    SESSION=${SESSION/set-cookie: /} # Substitute set-cookie for empty BECAUSE APPARENTLY ON DEV AND LOCAL THE CASING IS DIFFERENT FML
+    COOKIE=$SESSION
+    echo "Login Cookie: $SESSION"
 }
 
 get_lead_uuid() {
@@ -64,6 +69,7 @@ login() {
     -H 'Referer: https://dev.passportcenter.com/' \
     -H 'Origin: https://dev.passportcenter.com' \
     --request POST \
+    --insecure \
     --data-binary $"$1" --compressed
 }
 
