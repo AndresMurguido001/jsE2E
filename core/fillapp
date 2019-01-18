@@ -1,5 +1,7 @@
 #! /usr/local/bin/bash
 
+# Parameters: email
+
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
     set_name

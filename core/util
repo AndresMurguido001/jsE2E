@@ -115,5 +115,5 @@ get_option_pc() {
 get_option_pr() {
     # $1 is the option
 
-    get_option 'passportrenewal' "$2"
+    get_option 'passportrenewal' "$1"
 }

@@ -1,5 +1,7 @@
 #! /usr/local/bin/bash
 
+# Parameters: product-type expediting_option [email] [passportrenewal]
+
 # product option email source
 email="$([ $3 ] && echo $3 || echo "$(random_email)")"
 run core/createlead $1 $2 $email $4

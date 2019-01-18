@@ -1,5 +1,7 @@
 #! /usr/local/bin/bash
 
+# Parameters: product-type expediting_option [email] [passportrenewal]
+
 #TODO add check for bash version since this program requires bash 4 for the associative arrays
 ORDER_URL="$API_URL/order/create"
 

@@ -1,6 +1,6 @@
 #! /usr/local/bin/bash
 
-# EMAIL="$([ $3 ] && echo $3 || echo "$(random_email)")"
+# Parameters: [r] [a] [ar] [rar] email [refund method] [refund action] [refund type]
 
 # GET ADMIN LOGIN COOKIE
 get_cookie "admin"
