@@ -143,6 +143,15 @@ Possible Application Types:
 
 Child passport is currently not supported.
 
+### process
+___
+
+Processes the application for the given users. There is only one argument, the user email.
+
+```bash
+core/process [email]
+```
+
 ### refund
 ___
 
