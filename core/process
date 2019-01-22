@@ -1,0 +1,24 @@
+#! /usr/local/bin/bash
+
+# Parameters: <email>
+# Purpose: process an application by hitting the application/{uuid}/process endpoint
+
+get_application_uuid() {
+    EMAIL="$1"
+    QUERY="SELECT applications.uuid FROM users JOIN user_orders ON user_orders.user_id = users.id JOIN orders ON user_orders.order_id = orders.id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id WHERE users.email = '$EMAIL'"
+    RESULT="$(sql "$QUERY")"
+    remove_first_line_from_sql_output "$RESULT"
+}
+
+EMAIL="$1"
+UUID="$(get_application_uuid "$EMAIL")"
+PROCESS_URL="$API_URL/application/$UUID/process"
+
+echo "Process: Setting app for user: $EMAIL to process"
+echo "Process: Detected application UUID $UUID"
+
+get_cookie "$EMAIL" # Gotta log in
+
+api_call "$PROCESS_URL"
+
+echo "Process: If the response was 204 then your app should be processing"
