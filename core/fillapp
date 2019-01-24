@@ -26,7 +26,7 @@ TRAVELER_UUID=$( sql "$GET_TRAVELER_QUERY" | sed -n '1!p' | sed -E "s/\"//g")
 URL="$API_URL/traveler/$TRAVELER_UUID/update/model"
 
 # GET LOGIN COOKIE
-get_cookie $1
+login $1
 
 # POST FILLED APPLICATION FOR TRAVELER
 
