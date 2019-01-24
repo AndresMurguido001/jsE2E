@@ -5,11 +5,6 @@
 
 # If we get passed an argument we assume it's the program to run, we run it and exit
 # If we don't get an argument we continue to the interactive
-if [[ "$@" != "" ]]
-then
-    /usr/local/bin/bash $ROOT_DIRECTORY/$@
-    exit 0
-fi
 
 # Interactive Prompt
 print_heading() {
@@ -96,6 +91,12 @@ PROMPT="automation"
 clear
 load_dependencies
 print_heading
+
+if [[ "$@" != "" ]]
+then
+    /usr/local/bin/bash $ROOT_DIRECTORY/$@
+    exit 0
+fi
 
 # Run the chosen script
 history -r .input_history # Set up to be able to use history
