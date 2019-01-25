@@ -45,6 +45,8 @@ switchenv dev
 
 This will reload the start script with the correct variables needed to proceed by retrieving them from ```.env.dev``` in this case.
 
+### **Other Commands**
+
 If you need additional help, invoke the help menu:
 
 ```bash
