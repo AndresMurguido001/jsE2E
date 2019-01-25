@@ -5,13 +5,7 @@ This is a collection of scripts to automate some repetitive tasks when developin
 
 ## Getting Started
 
-To get started you just need to clone the repo to your machine, and follow the [setup](#setup) instructions below. As soon as you have all of tools installed you will need to make the initial ```./start``` script executable. 
-
-All you have to do is type:
-
- ```bash
- chmod +x ./start
- ```
+To get started you just need to clone the repo to your machine, and follow the [setup](#setup) instructions below.
  
 Before running the executable script you need to ensure you copy the env variables from ```env.example``` so that you could have a template of all of the variables required to run the scripts. Run the following command in your terminal to copy the contents of ```.env.example``` to ```.env``` (.env files are gitignored) or ```.env.dev || .env.local``` depending on your environment.
 
@@ -37,13 +31,21 @@ All of the scripts that can be invoked are grouped into the following categories
 
 To invoke one of the grouped scripts you just type the ```folder/script``` along with whatever arguments are needed to run the script.
 
-An important thing to note is that on the top of the script menu you will see the environment that has been selected, to choose your environment before running the any other scripts type switchenv <environment>:
+### **Multiple Environments**
+
+To have multiple environments, all you need is to have multiple `.env` filed named after the environment you want. For example, you can have `.env.dev`, `.env.prod` and `.env.local` and switch between them using `switchenv <environment>`. 
+
+Variables are loaded from your `.env` and the `.env.<environment>` of your choice, meaning that any variables that are not environment specific go in your `.env` and any environment specific variables go in your other envs.
+
+On the top of the script menu you will see the environment that has been selected, to choose your environment before running the any other scripts type switchenv <environment>:
 
 ```bash
 switchenv dev
 ```
 
 This will reload the start script with the correct variables needed to proceed by retrieving them from ```.env.dev``` in this case.
+
+### **Other Commands**
 
 If you need additional help, invoke the help menu:
 
@@ -60,10 +62,10 @@ clear
 
 ### Quick Launch
 
-You can skip the prompts and jump right into script by invoking it together with the start script. For example you could launch the refund test script without seeing the ./start interface.
+You can skip the prompts and jump right into script by invoking it together with the start script. For example you could launch the ordercreate script without seeing the ./start interface.
 
 ```bash
-./start shared/refundtest 5
+./start core/createorder new-passport rush
 ```
 
 ## Quick Reference
@@ -214,7 +216,7 @@ Progress: 100%
 Create `n` amount of orders and create refunds for them. It accepts only one argument which is an [integer].
 
 ```bash
-shared/status [5]
+shared/refundstest 5
 ```
 
 
@@ -224,7 +226,7 @@ All of the scripts that may not apply to the whole team can be saved in this fol
 
 ## Setup
 
-In the root directory you can find an automated script that detects whether your system has the necessary requirements needed to use the automation suite. To run the script you just have to type: 
+In the root directory you can find a script that detects whether your system has the necessary requirements needed to use the automation suite. To run the script you just have to type: 
 
 ```bash
 ./setup
