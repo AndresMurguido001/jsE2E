@@ -1,0 +1,21 @@
+USER_EMAIL="$1"
+INFO_QUERY="SELECT 
+	CONCAT('*Refund*: | Status: ',refunds.status,' | ID: ',refunds.id,' | UUID: ',refunds.uuid,' | '),
+	CONCAT('*Manifest Item*: | Status: ',manifest_items.status,' | ID: ',manifest_items.id,' | '),
+	CONCAT('*Application*: | Progress: ',applications.progress,' | ID: ',applications.id,' | UUID: ',applications.uuid,' | '),
+	CONCAT('*Order*: | ',orders.order_number,' | ',products.subtype, ' | ID: ',orders.id,' | UUID: ',orders.uuid,' | '),
+	CONCAT('*User*: | Name: ',users.first_name,' ',users.last_name,' | ID: ',users.id,' | UUID: ',users.uuid,' | ')
+FROM users 
+JOIN user_orders ON users.id = user_orders.user_id  
+JOIN orders ON orders.id = user_orders.order_id 
+JOIN travelers ON travelers.order_id = orders.id 
+JOIN applications ON applications.traveler_id = travelers.id 
+JOIN products ON products.id = applications.product_id
+LEFT JOIN manifest_items ON manifest_items.case_id = applications.id
+LEFT JOIN refunds ON refunds.order_id = orders.id
+WHERE users.email = '$USER_EMAIL'"
+
+RESULT="$(sql "$INFO_QUERY")"
+VALUES="$(remove_first_line_from_sql_output "$RESULT")"
+
+awk -F$'\t' '{ for(i=NF; i>=2; --i) printf "%s \n_______________________________________\n\n", $i; print $1 }' <<< "$VALUES"
