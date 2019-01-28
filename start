@@ -31,12 +31,12 @@ load_dependencies() {
 
     # Export ENV variables
     set -o allexport;
-    source .env;
+    source $ROOT_DIRECTORY/.env;
     set +o allexport
 
     # Export ENV variables for the chosen environment
     set -o allexport;
-    source .env.$ENVIRONMENT;
+    source $ROOT_DIRECTORY/.env.$ENVIRONMENT;
     set +o allexport
 
     # Export Util functions
@@ -52,7 +52,7 @@ load_dependencies() {
 
 switch_env() {
     # $1 is the environment to switch to
-    sed -i '' -e "s/ENVIRONMENT=.*/ENVIRONMENT=$1/g" .env
+    sed -i '' -e "s/ENVIRONMENT=.*/ENVIRONMENT=$1/g" $ROOT_DIRECTORY/.env
 }
 
 get_script_usage() {
