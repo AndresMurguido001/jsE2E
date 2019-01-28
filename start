@@ -31,12 +31,12 @@ load_dependencies() {
 
     # Export ENV variables
     set -o allexport;
-    source .env;
+    source $ROOT_DIRECTORY/.env;
     set +o allexport
 
     # Export ENV variables for the chosen environment
     set -o allexport;
-    source .env.$ENVIRONMENT;
+    source $ROOT_DIRECTORY/.env.$ENVIRONMENT;
     set +o allexport
 
     # Export Util functions
@@ -52,7 +52,7 @@ load_dependencies() {
 
 switch_env() {
     # $1 is the environment to switch to
-    sed -i '' -e "s/ENVIRONMENT=.*/ENVIRONMENT=$1/g" .env
+    sed -i '' -e "s/ENVIRONMENT=.*/ENVIRONMENT=$1/g" $ROOT_DIRECTORY/.env
 }
 
 get_script_usage() {
@@ -88,15 +88,16 @@ help() {
 PROMPT="automation"
 
 # What to do when the program begins
-clear
 load_dependencies
-print_heading
 
 if [[ "$@" != "" ]]
 then
-    /usr/local/bin/bash $ROOT_DIRECTORY/$@
+    eval "/usr/local/bin/bash $ROOT_DIRECTORY/$@"
     exit 0
 fi
+
+clear
+print_heading
 
 # Run the chosen script
 history -r .input_history # Set up to be able to use history
@@ -104,10 +105,10 @@ set -o vi # Set up vi keybinds to be able to use up and down arrows for history
 while [ true ]
 do
 
-    read -e -p "@$PROMPT: " COMMAND
-    history -s "$COMMAND" # Save command to history
+    read -e -p "@$PROMPT: " args
+    history -s "$args" # Save command to history
 
-    case $COMMAND in
+    case $args in
         exit )
             break
             ;;
@@ -121,7 +122,7 @@ do
             continue
             ;;
         switchenv* )
-            ENV="$(echo "$COMMAND" | cut -d' ' -f2)"
+            ENV="$(echo "$args" | cut -d' ' -f2)"
             echo "Switching Environment to: $ENV"
             switch_env $ENV
             load_dependencies
@@ -130,12 +131,12 @@ do
             ;;
         * )
             echo # Echo empty line to start
-            echo -e "\033[0;35mRunning: $COMMAND\033[0m"
+            echo -e "\033[0;35mRunning: $args\033[0m"
             echo
-            /usr/local/bin/bash $ROOT_DIRECTORY/$COMMAND
+            run "$args"
             echo
             echo -e "\033[0;35mExecution Finished\033[0m"
-            echo # Echo empty linke to end
+            echo # Echo empty line to end
         esac
 
     
