@@ -1,3 +1,8 @@
+#! /usr/local/bin/bash
+
+# Parameters: <email>
+# Purpose: Get IDs and UUIDs of everything related to a user and its order
+
 USER_EMAIL="$1"
 INFO_QUERY="SELECT 
 	CONCAT('*Refund*: | Status: ',refunds.status,' | ID: ',refunds.id,' | UUID: ',refunds.uuid,' | '),
