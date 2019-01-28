@@ -93,8 +93,6 @@ load_dependencies
 if [[ "$@" != "" ]]
 then
     eval "/usr/local/bin/bash $ROOT_DIRECTORY/$@"
-    # eval "for word in $args; do echo -n \$word; echo -n ' '; done"
-    echo
     exit 0
 fi
 
