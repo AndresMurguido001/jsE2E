@@ -1,7 +1,4 @@
 #! /usr/local/bin/bash
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $dir/core/util
-
 echo "Creating order in $API_URL";
 echo
 DATE=$(printf '%x\n' $(date +%s))
@@ -11,7 +8,7 @@ case $1 in
          
         EMAIL=$EMAIL_BASE+PR${DATE}MA@govworks.com
         echo
-        run core/createorder PASSPORT_RENEWAL SMART $EMAIL
+        run core/createorder passport-renewal standard $EMAIL
         echo "Created passport renewal order for $EMAIL, smart shipping (Mailaway)"
         echo -n "Would  you like to fill out the users profile? (y/n): "
         read RESPONSE
@@ -24,7 +21,7 @@ case $1 in
     AUTO )
         EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
         echo
-        run core/createorder NEW_PASSPORT RUSH $EMAIL passportcenter
+        run core/createorder new-passport standard $EMAIL passportcenter
         echo "Created new passport order for $EMAIL, rush shipping (Automanifest)"
         echo -n "Would  you like to fill out the users profile? (y/n): "
         read RESPONSE
@@ -38,7 +35,7 @@ case $1 in
         EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
         echo "New passport trial with rush shipping (Automanifest)"
         echo
-        run core/createtrial NEW_PASSPORT RUSH $EMAIL
+        run core/createtrial new-passport rush $EMAIL
         echo -n "Would  you like to fill out the users profile? (y/n): "
         read RESPONSE
         if [ $RESPONSE == "y" ];
