@@ -87,7 +87,7 @@ set_user_password_to_password() {
 }
 
 run() {
-    /usr/local/bin/bash $ROOT_DIRECTORY/$@
+    eval "/usr/local/bin/bash $ROOT_DIRECTORY/$@"
 }
 
 random_email() {

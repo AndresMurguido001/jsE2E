@@ -1,0 +1,30 @@
+#! /usr/local/bin/bash
+
+# Parameters: [roles (comma separated)] [email]
+# Purpose: Get IDs and UUIDs of everything related to a user and its order
+# ["admin","cs manager","logistics manager","csr","courier","agent","courier manager","content manager","metric","mailaway manager","license manager","customer"]
+
+create_roles_array() {
+    # $1 is a comma separated list of roles
+    roles=""
+
+    IFS=,
+    for role in $1
+    do
+        roles+="\""$role"\","
+    done
+    roles="$(echo "$roles" | sed 's/\(.*\),/\1/')"
+    echo "[$roles]"
+}
+
+set_name
+login "admin"
+email="$([ $2 ] && echo $2 || echo "$(random_email)")"
+rolesArray="$([ "$1" ] && create_roles_array "$1" || create_roles_array "csr")"
+
+echo "Create Team Member: Creating new team member named $FIRSTNAME $LASTNAME, with email $email and roles $rolesArray"
+
+URL="$API_URL/team/create"
+PAYLOAD='{ "first_name": "'"$FIRSTNAME"'", "last_name": "'"$LASTNAME"'", "email": "'"$email"'", "active": true, "company_name": "GovWorks", "password": "password", "password_confirmation": "password", "title": "Phone Person","direct": "(351) 651-6816","roles": '"$rolesArray"' }'
+
+api_call "$URL" "$PAYLOAD"
