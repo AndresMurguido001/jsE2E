@@ -3,7 +3,7 @@
 # Parameters: [r] [a] [ar] [rar] email [refund method] [refund action] [refund type]
 
 # GET ADMIN LOGIN COOKIE
-get_cookie "admin"
+login "admin"
 
 # GET ORDER NUMBER
 get_user_info() {

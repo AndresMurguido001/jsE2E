@@ -30,7 +30,7 @@ api_call() {
     --data-binary $"$2" --compressed
 }
 
-get_cookie() {
+login() {
     if [[ "$1" == "admin" ]]
     then
         EMAIL="$ADMIN_EMAIL"
@@ -41,7 +41,7 @@ get_cookie() {
     fi
     
     echo "Attempting login with these credentials: $EMAIL $PASSWORD"
-    COOKIE_HEADER="$(login '{"email": "'$EMAIL'", "password": "'$PASSWORD'"}' | grep gov_api_session | tr ';' '\n' | grep gov_api_session)"
+    COOKIE_HEADER="$(get_cookie '{"email": "'$EMAIL'", "password": "'$PASSWORD'"}' | grep gov_api_session | tr ';' '\n' | grep gov_api_session)"
     SESSION=${COOKIE_HEADER/Set-Cookie: /} # Substitute Set-Cookie for empty
     SESSION=${SESSION/set-cookie: /} # Substitute set-cookie for empty BECAUSE APPARENTLY ON DEV AND LOCAL THE CASING IS DIFFERENT FML
     COOKIE=$SESSION
@@ -62,7 +62,7 @@ get_request() {
 }
 
 # LOGIN AND GET COOKIE
-login() {
+get_cookie() {
     curl -sD - -o /dev/null "$API_URL/auth/login" \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json; charset=UTF-8' \
