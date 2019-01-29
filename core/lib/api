@@ -31,7 +31,7 @@ login() {
         PASSWORD="$PASSWORD" # Password coming from .env
     fi
     
-    echo "Attempting login with these credentials: $EMAIL $PASSWORD"
+    echo "Attempting login with these credentials: $(red "$EMAIL $PASSWORD")"
     COOKIE_HEADER="$(get_cookie '{"email": "'$EMAIL'", "password": "'$PASSWORD'"}' | grep gov_api_session | tr ';' '\n' | grep gov_api_session)"
     SESSION=${COOKIE_HEADER/Set-Cookie: /} # Substitute Set-Cookie for empty
     SESSION=${SESSION/set-cookie: /} # Substitute set-cookie for empty BECAUSE APPARENTLY ON DEV AND LOCAL THE CASING IS DIFFERENT FML

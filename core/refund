@@ -36,7 +36,7 @@ authorize_refund_random() {
     REFUND_ACTION=${REFUND_ACTIONS[$RANDOM % ${#REFUND_ACTIONS[@]} ]}
     REFUND_TYPE=${REFUND_TYPES[$RANDOM % ${#REFUND_TYPES[@]} ]}
 
-    echo "Doing a $REFUND_ACTION on $REFUND_METHOD for user $1"
+    echo "Doing a $(cyan "$REFUND_ACTION on $REFUND_METHOD") for user $(purple "$1")"
 
     PAYLOAD='{"action":"'$REFUND_ACTION'","check_number":"39849234","email":false,"voucher":false,"refund_amount":20.9,"refund_method":"'$REFUND_METHOD'","type":"void","shipping":false,"fee":0}'
 
@@ -68,7 +68,7 @@ request_refund() {
     # Sends the initial request for refund email to user, but does not refund
     REFUND_URL="$API_URL/order/cancel/call"
     ORDER_NUMBER="$(get_user_info "$1")"
-    echo "ORDER #: $ORDER_NUMBER"
+    echo "ORDER #: $(green "$ORDER_NUMBER")"
     PAYLOAD='{"order_number":"'$ORDER_NUMBER'","email":"'$1'"}'
     api_call "$REFUND_URL" "$PAYLOAD"
 }

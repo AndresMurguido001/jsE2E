@@ -33,12 +33,12 @@ login $1
 if [[ -z "$2" ]] #If the second parameter is empty, auto detect the product type of the application
 then
     PRODUCT_TYPE="$(get_user_order_product_type "$1")"
-    echo "Fill App: Detected $PRODUCT_TYPE application"
+    echo "Fill App: Detected $(cyan "$PRODUCT_TYPE") application"
 else
     PRODUCT_TYPE="$2"
-    echo "Fill App: Filling application as $2"
+    echo "Fill App: Filling application as $("$2")"
 fi
 
 api_call "$URL" "$(get_application_fill_model "$PRODUCT_TYPE")"
 echo
-echo "Fill App: Filled application for $1"
+echo "Fill App: Filled application for $(purple "$1")"
