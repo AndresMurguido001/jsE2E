@@ -1,76 +1,8 @@
 #! /usr/local/bin/bash
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-sql() {
-    mycli -u "$DB_USERNAME" --pass "$DB_PASSWORD" -h "$DB_HOST" -D "$DB_DATABASE" -e "$1"
-}
-
-remove_first_line_from_sql_output() {
-    echo "$1" | sed -n '1!p' | sed -E "s/\"//g";
-}
-
-api_call() {
-    #Parameter 1 is URL
-    #parameter 2 is Payload
-    #Parameter 3 is optional and it's the method
-    METHOD=$([ $3 ] && echo $3 || echo POST)\
-    
-    curl "$1" \
-    --insecure \
-    --silent \
-    --output /dev/null \
-    -H 'Accept: application/json, text/plain, */*' \
-    -H 'Referer: https://dev.passportcenter.com/checkout/step4' \
-    -H 'Origin: https://dev.passportcenter.com' \
-    -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36' \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    --cookie "$COOKIE" \
-    -X "$METHOD" \
-    --write-out "Api Call: $METHOD $1 %{http_code}\n" \
-    --data-binary $"$2" --compressed
-}
-
-login() {
-    if [[ "$1" == "admin" ]]
-    then
-        EMAIL="$ADMIN_EMAIL"
-        PASSWORD="$ADMIN_PASS" # Password coming from .env
-    else
-        EMAIL="$1"
-        PASSWORD="$PASSWORD" # Password coming from .env
-    fi
-    
-    echo "Attempting login with these credentials: $EMAIL $PASSWORD"
-    COOKIE_HEADER="$(get_cookie '{"email": "'$EMAIL'", "password": "'$PASSWORD'"}' | grep gov_api_session | tr ';' '\n' | grep gov_api_session)"
-    SESSION=${COOKIE_HEADER/Set-Cookie: /} # Substitute Set-Cookie for empty
-    SESSION=${SESSION/set-cookie: /} # Substitute set-cookie for empty BECAUSE APPARENTLY ON DEV AND LOCAL THE CASING IS DIFFERENT FML
-    COOKIE=$SESSION
-    echo "Login Cookie: $SESSION"
-}
 
 get_lead_uuid() {
     QUERY="SELECT uuid from hot_leads WHERE email = '$1'"
     sql "$QUERY";
-}
-
-get_request() {
-    curl $1 \
-    --cookie $COOKIE \
-    -H 'HOST: api.dev.govworks.com' \
-    -H 'Connection: close' \
-    -H 'User-Agent: Paw/3.1.7 (Macintosh; OS X/10.14.2) GCDHTTPRequest'
-}
-
-# LOGIN AND GET COOKIE
-get_cookie() {
-    curl -sD - -o /dev/null "$API_URL/auth/login" \
-    -H 'Accept: application/json' \
-    -H 'Content-Type: application/json; charset=UTF-8' \
-    -H 'Referer: https://dev.passportcenter.com/' \
-    -H 'Origin: https://dev.passportcenter.com' \
-    --request POST \
-    --insecure \
-    --data-binary $"$1" --compressed
 }
 
 # Magic https://stackoverflow.com/a/449890
