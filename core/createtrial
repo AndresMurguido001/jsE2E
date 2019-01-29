@@ -11,4 +11,4 @@ api_call "https://api.dev.govworks.com/api/trial/$UUID" '' "GET" #Hit this endpo
 
 set_user_password_to_password $email;
 
-echo "Create Trial: Trial Created, Login with: $email"
+echo "Create Trial: Trial Created, Login with: $(purple "$email")"

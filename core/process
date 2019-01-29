@@ -14,11 +14,11 @@ EMAIL="$1"
 UUID="$(get_application_uuid "$EMAIL")"
 PROCESS_URL="$API_URL/application/$UUID/process"
 
-echo "Process: Setting app for user: $EMAIL to process"
-echo "Process: Detected application UUID $UUID"
+echo "Process: Setting app for user: $(purple "$EMAIL") to process"
+echo "Process: Detected application UUID $(green "$UUID")"
 
 login "$EMAIL" # Gotta log in
 
 api_call "$PROCESS_URL"
 
-echo "Process: If the response was 204 then your app should be processing"
+green "Process: If the response was 204 then your app should be processing"
