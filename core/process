@@ -17,7 +17,7 @@ PROCESS_URL="$API_URL/application/$UUID/process"
 echo "Process: Setting app for user: $EMAIL to process"
 echo "Process: Detected application UUID $UUID"
 
-get_cookie "$EMAIL" # Gotta log in
+login "$EMAIL" # Gotta log in
 
 api_call "$PROCESS_URL"
 
