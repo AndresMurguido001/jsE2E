@@ -1,0 +1,9 @@
+#! /usr/local/bin/bash
+
+sql() {
+    mycli -u "$DB_USERNAME" --pass "$DB_PASSWORD" -h "$DB_HOST" -D "$DB_DATABASE" -e "$1"
+}
+
+remove_first_line_from_sql_output() {
+    echo "$1" | sed -n '1!p' | sed -E "s/\"//g";
+}
