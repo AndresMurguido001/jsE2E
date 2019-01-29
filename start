@@ -39,9 +39,9 @@ load_dependencies() {
     source $ROOT_DIRECTORY/.env.$ENVIRONMENT;
     set +o allexport
 
-    # Export Util functions
+    # Export Lib functions
     set -o allexport
-    source $CORE_DIRECTORY/util
+    for f in $CORE_DIRECTORY/lib/*; do source $f; done
     set +o allexport
 
     # Export all the variables
