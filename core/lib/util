@@ -22,6 +22,12 @@ run() {
     eval "/usr/local/bin/bash $ROOT_DIRECTORY/$@"
 }
 
+# @description Returns the given value if there is one, if not, returns the second argument as the default string
+# @example tern "$myvar" "Default Value"
+tern() {
+   [[ -n "$1" ]] && echo "$1" || echo "$2"
+}
+
 random_email() {
     ID="$(printf '%x\n' $(python -c 'from time import time; print int(round(time() * 1000))'))"
     echo "$EMAIL_BASE+$ID@govworks.com"
