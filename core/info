@@ -3,6 +3,9 @@
 # Parameters: <email>
 # Purpose: Get IDs and UUIDs of everything related to a user and its order
 
+# Check for required params
+echo ${1:?You must provide an email} > /dev/null
+
 USER_EMAIL="$1"
 INFO_QUERY="SELECT 
 	CONCAT('*Refund*: | Status: ',refunds.status,' | ID: ',refunds.id,' | UUID: ',refunds.uuid,' | '),

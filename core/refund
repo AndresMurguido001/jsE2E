@@ -2,6 +2,10 @@
 
 # Parameters: [r] [a] [ar] [rar] email [refund method] [refund action] [refund type]
 
+# Check for required params
+echo ${1:?You must provide a refund option} > /dev/null
+echo ${2:?You must provide an email so we can find the order} > /dev/null
+
 # GET ADMIN LOGIN COOKIE
 login "admin"
 

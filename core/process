@@ -3,6 +3,9 @@
 # Parameters: <email>
 # Purpose: process an application by hitting the application/{uuid}/process endpoint
 
+# Check for required params
+echo ${1:?You must provide an email} > /dev/null
+
 get_application_uuid() {
     EMAIL="$1"
     QUERY="SELECT applications.uuid FROM users JOIN user_orders ON user_orders.user_id = users.id JOIN orders ON user_orders.order_id = orders.id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id WHERE users.email = '$EMAIL'"
