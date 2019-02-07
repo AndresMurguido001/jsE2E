@@ -36,7 +36,7 @@ then
     echo "Fill App: Detected $(cyan "$PRODUCT_TYPE") application"
 else
     PRODUCT_TYPE="$2"
-    echo "Fill App: Filling application as $("$2")"
+    echo "Fill App: Filling application as $(cyan "$2")"
 fi
 
 api_call "$URL" "$(get_application_fill_model "$PRODUCT_TYPE")"
