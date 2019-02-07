@@ -1,38 +1,24 @@
 #! /usr/local/bin/bash
 
-DATE=$(printf '%x\n' $(date +%s))
+create_options() {
+    OPTION_EMAIL=$1
 
-get_user_info() {
-    # Argument 1 is user's email
-    GET_PRODUCT_TYPE_QUERY="SELECT users.first_name, users.last_name, products.subtype, orders.order_number, applications.status, applications.progress FROM users JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id JOIN products ON products.id = applications.product_id WHERE users.email = '$1'"
-    RESULT="$(sql "$GET_PRODUCT_TYPE_QUERY")"
-    USER_INFO=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
+    [[ $FILL == "y" ]] && run core/fillapp "$OPTION_EMAIL" 
+    [[ $PROCESS == "y" ]] && run core/process "$OPTION_EMAIL" 
+    [[ $REFUND == "y" ]] && run core/refund rar "$OPTION_EMAIL" 
+    [[ $INFO == "y" ]] && run core/status "$OPTION_EMAIL"
 }
 
 create_auto() {
-    EMAIL_AUTO=$EMAIL_BASE+PR${DATE}NM@govworks.com
-    run core/createorder 'new-passport' 'standard' "$EMAIL_AUTO" 'passportcenter'
+    EMAIL="$(random_email)"
+    run core/createorder 'new-passport' 'standard' ""$EMAIL"" 'passportcenter'
+    create_options "$EMAIL"
+}
 
-    if [ $FILL == "y" ];
-    then
-        run core/fillapp $EMAIL_AUTO
-    fi
-
-    # get_user_info "$EMAIL"
-    # USER_PROGRESS="$(cut -d ' ' -f6 <<< $USER_INFO)"
-    # && $USER_PROGRESS -eq 100
-
-    if [[ $PROCESS == "y" ]];
-    then
-        run core/process $EMAIL_AUTO
-    else 
-        echo "Process App: Application is not ready to be processed"
-    fi
-
-    if [ $INFO == "y" ];
-    then
-        run core/status $EMAIL_AUTO
-    fi
+create_custom() {
+    EMAIL="$(random_email)"
+    run core/createorder "$product" "$shipping" ""$EMAIL"" "$site"
+    create_options "$EMAIL"
 }
 
 create_e2e() {
@@ -43,93 +29,185 @@ create_e2e() {
 }
 
 create_mailaway() {
-    EMAIL=$EMAIL_BASE+PR${DATE}MA@govworks.com
-    run core/createorder 'passport-renewal' 'standard' "$EMAIL"
-    
-    if [ $FILL == "y" ];
-    then
-        run core/fillapp $EMAIL
-    fi
-
-    get_user_info "$EMAIL"
-    USER_PROGRESS="$(cut -d ' ' -f6 <<< $USER_INFO)"
-
-    if [[ $PROCESS == "y" && $USER_PROGRESS -eq 100 ]];
-    then
-        run core/process $EMAIL
-    else 
-        echo "Process App: Application is not ready to be processed"
-    fi
-
-    if [ $INFO == "y" ];
-    then
-        run core/status $EMAIL
-    fi
+    EMAIL="$(random_email)"
+    run core/createorder passport-renewal standard "$EMAIL"
+    create_options "$EMAIL"
 }
 
 create_trial() {
-    EMAIL=$EMAIL_BASE+PR${DATE}NM@govworks.com
-    run core/createtrial new-passport rush $EMAIL
+    EMAIL="$(random_email)"
+    run core/createtrial new-passport rush "$EMAIL"
+    create_options "$EMAIL"
+}
 
-    if [ $FILL == "y" ];
-    then
-        run core/fillapp $EMAIL
-    fi
+custom_options() {
+    site_select
+    clear
+    product_select
+    clear
+    shipping_select
+    clear
+    echo "Ok so you want to make a $site.com order for a $product, with $shipping shipping."
+}
+
+product_select() {
+    echo "Select the product you would like to order"
+    product_options=("passport-renewal" "new-passport" "second-passport" "child-passport" "name-change" "lost-passport" "damaged-passport" "stolen-passport") 
+    
+    select product in "${product_options[@]}"
+    do
+    case $product in
+        "passport-renewal" )
+            break;;
+        "new-passport" )
+            break;;
+        "new-passport" )
+            break;;
+        * )
+            echo "That ($product) was not one of the options, try again.";;
+    esac
+    done
+}
+
+prompt_options() {
+    echo -n "How many orders would you like to make: "
+    read QTY
+    clear
+    echo -n "Would you like to fill out the user's profile (y/n): "
+    read FILL
+    clear
+    echo -n "After the application is filled out would you like to process the application (y/n): "
+    read PROCESS
+    clear
+    echo -n "Would you like to cancel the order, and create a refund (y/n): "
+    read REFUND
+    clear
+    echo -n "...and finally, do you want the script to print user/order info (y/n): "
+    read INFO
+    clear
+}
+
+script_select() {
+    script_options=("auto" "custom" "e2e" "mailaway" "trial")
+
+    select script in "${script_options[@]}"
+    do
+    case $script in
+        "auto" )
+            break;;
+        "custom" )
+            break;;
+        "e2e" )
+            break;;
+        "mailaway" )
+            break;;
+        "trial" )
+            break;;
+        * )
+            echo "That script you selected ($script) was not one of the options";;
+    esac
+    done
+
+    clear
+    shared/create "$script"
+}
+
+shipping_select() {
+    echo "Select the shipping speed/service for the order"
+    shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
+
+    select shipping in "${shipping_options[@]}"
+    do
+    case $shipping in
+        "same_day" )
+            break;;
+        "next_day" )
+            break;;
+        "priority" )
+            break;;
+        "rush" )
+            break;;
+        "standard" )
+            break;;
+        "smart" )
+            break;;
+        * )
+            echo "That ($shipping) was not one of the options";;
+    esac
+    done
+}
+
+site_select() {
+    echo "Select the source of the order"
+    site_options=("passportcenter" "passportrenewal")
+
+    select site in "${site_options[@]}"
+    do
+    case $site in
+        "passportcenter" )
+            break;;
+        "passportrenewal" )
+            break;;
+        * )
+            echo "That ($site) was not one of the options, try again";;
+    esac
+    done
 }
 
 case $1 in 
-    mailaway )
-        echo "Ok, creating a standard mailaway order."
-        echo -n "How many would you like to make: "
-        read QTY
-        echo -n "Would you like to fill out the user's profile (y/n): "
-        read FILL
-        echo -n "After the application is filled out would you like to process the application (y/n): "
-        read PROCESS
-        echo -n "...and finally, do you want the script to print user/order info (y/n): "
-        read INFO
-        for ((i=0;i<$QTY;i++))
-        do
-            create_mailaway
-        done
-        ;;
     auto )
-        echo "Ok, creating a standard new passport order."
-        echo -n "How many would you like to make: "
-        read QTY
-        echo -n "Would you like to fill out the user's profile (y/n): "
-        read FILL
-        echo -n "After the application is filled out would you like to process the application (y/n): "
-        read PROCESS
-        echo -n "...and finally, do you want the script to print user/order info (y/n): "
-        read INFO
+        echo "Ok, creating a standard new passport order, should be automanifested."
+        prompt_options
         for ((i=0;i<$QTY;i++))
         do
             create_auto
         done
         ;;
+    custom )
+        echo "Creating a custom order, follow the directions below:"
+        custom_options
+        echo -n "Is all of the information above correct? (y/n): "
+        read ORDER_OK
+        if [[ $ORDER_OK == "y" ]];
+        then
+            clear
+            echo -n "Would you like to do some additional tasks, like filling the app? (y/n) "
+            read PROMPT
+            [ $PROMPT == "y" ] && prompt_options || QTY=1
+            for ((i=0;i<$QTY;i++))
+            do
+                create_custom
+            done
+
+        else
+            echo "Try again?"
+            shared/create
+        fi        
+        ;;
+    e2e )
+        echo "Please note, to run this script you have to have e2e installed"
+        create_e2e
+        ;;
+    mailaway )
+        echo "Ok, creating a standard mailaway order."
+        prompt_options
+        for ((i=0;i<$QTY;i++))
+        do
+            create_mailaway
+        done
+        ;;
     trial )
-        echo "Ok, creating a standard new passport order."
-        echo -n "How many would you like to make: "
-        read QTY
-        echo -n "Would you like to fill out the user's profile (y/n): "
-        read FILL
-        echo -n "After the application is filled out would you like to process the application (y/n): "
-        read PROCESS
-        echo -n "...and finally, do you want the script to print user/order info (y/n): "
-        read INFO
+        echo "Creating a hot lead / trial order"
+        prompt_options
         for ((i=0;i<$QTY;i++))
         do
             create_trial
         done
         ;;
-    e2e )
-        create_e2e
-        ;;
     * ) 
-        echo "What type of order would you like to create (auto, e2e, mailaway, trial): "
-        read CHOICE
-        shared/create "$CHOICE"
+        echo "What type of order would you like to create?"
+        echo "Automanifest Order, Custom Order, E2E Order, Mailaway Order, or Trial Order"
+        script_select
         ;;
 esac
 
