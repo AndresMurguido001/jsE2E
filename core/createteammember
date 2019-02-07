@@ -6,14 +6,14 @@
 
 create_roles_array() {
     # $1 is a comma separated list of roles
-    roles=""
+    local roles=""
 
     IFS=,
     for role in $1
     do
         roles+="\""$role"\","
     done
-    roles="$(echo "$roles" | sed 's/\(.*\),/\1/')"
+    local roles="$(echo "$roles" | sed 's/\(.*\),/\1/')"
     echo "[$roles]"
 }
 
