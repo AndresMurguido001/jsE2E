@@ -2,7 +2,10 @@
 
 # Parameters: product-type expediting_option [email] [passportrenewal]
 
-#TODO add check for bash version since this program requires bash 4 for the associative arrays
+# Check for required params
+echo "${1:?Must provide a product}" > /dev/null
+echo "${2:?Must provide an expediting option}" > /dev/null
+
 ORDER_URL="$API_URL/order/create"
 
 PRODUCT="$(get_product $1)"
@@ -16,7 +19,7 @@ else #Right now you could just pass anything as the second parameter and the sou
     SOURCE='passportrenewal';
 fi
 
-EMAIL="$(tern "$3" "$(random_email)" )"
+EMAIL=${3:-$(random_email)}
 
 set_name
 echo "Create Order: Creating a $(cyan "$2 $1") order on $(yellow "$SOURCE") under the email $(purple "$EMAIL") for $(purple "$FIRSTNAME")"

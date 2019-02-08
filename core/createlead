@@ -2,7 +2,11 @@
 
 # Parameters: product-type expediting_option [email] [passportrenewal]
 
-#TODO add check for bash version since this program requires bash 4 for the associative arrays
+# Check for required params
+${1:?Must provide a product}
+${2:?Must provide an expediting option}
+${3:?Must provide an email}
+
 HOTLEAD_URL="$API_URL/hotlead"
 
 PRODUCT="$(get_product $1)"

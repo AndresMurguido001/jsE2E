@@ -2,6 +2,8 @@
 
 # Parameters: email
 
+echo ${1:?You must provide an email} > /dev/null
+
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
     set_name

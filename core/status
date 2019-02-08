@@ -1,5 +1,10 @@
 #! /usr/local/bin/bash
 
+# Parameters: <email>
+
+# Check for required params
+echo ${1:?You must provide an email} > /dev/null
+
 # Escape sequence and resets
 ESC_SEQ="\x1b["
 RESET_ALL="${ESC_SEQ}0m"
