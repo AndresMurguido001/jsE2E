@@ -1,4 +1,13 @@
 #! /usr/local/bin/bash
+clear
+
+# Making some constants
+# TODO: auto-generate these constants
+product_options=("passport-renewal" "new-passport" "second-passport" "child-passport" "name-change" "lost-passport" "damaged-passport" "stolen-passport") 
+script_options=("auto" "custom" "e2e" "mailaway" "random" "trial")
+shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
+site_options=("passportcenter" "passportrenewal")
+
 
 create_options() {
     OPTION_EMAIL=$1
@@ -22,8 +31,6 @@ create_custom() {
 }
 
 create_e2e() {
-    echo "Running E2E for you, sit back and relax"
-    echo "At the moment this script only creates an mailaway order in portal"
     cd ~/gw/gov-portal/tests/E2E-Testing && npm i | npm run update | npm run server
     cd ~/gw/gov-portal/tests/E2E-Testing && npm run mailaway
 }
@@ -31,6 +38,18 @@ create_e2e() {
 create_mailaway() {
     EMAIL="$(random_email)"
     run core/createorder passport-renewal standard "$EMAIL"
+    create_options "$EMAIL"
+}
+
+create_random() {
+    # Random values for the payload
+    EMAIL="$(random_email)"
+    SELECTED_PRODUCT=${product_options[$RANDOM % ${#product_options[@]} ]}
+    SELECTED_SHIP=${shipping_options[$RANDOM % ${#shipping_options[@]} ]}
+    SELECTED_SITE=${site_options[$RANDOM % ${#site_options[@]} ]}
+
+    echo "Create: Creating a $(cyan "$SELECTED_PRODUCT") with $(purple "$SELECTED_SHIP") on $(yellow "$SELECTED_SITE")"
+    run core/createorder "$SELECTED_PRODUCT" "$SELECTED_SHIP" ""$EMAIL"" "$SELECTED_SITE"
     create_options "$EMAIL"
 }
 
@@ -47,13 +66,12 @@ custom_options() {
     clear
     shipping_select
     clear
-    echo "Ok so you want to make a $site.com order for a $product, with $shipping shipping."
+    echo "Create: Ok so you want to make a $(yellow $site.com) order for a $(cyan $product), with $(purple $shipping) shipping."
 }
 
 product_select() {
-    echo "Select the product you would like to order"
-    product_options=("passport-renewal" "new-passport" "second-passport" "child-passport" "name-change" "lost-passport" "damaged-passport" "stolen-passport") 
-    
+    echo "Create: Select the $(cyan product) you would like to order"
+        
     select product in "${product_options[@]}"
     do
     case $product in
@@ -61,34 +79,43 @@ product_select() {
             break;;
         "new-passport" )
             break;;
-        "new-passport" )
+        "second-passport" )
+            break;;
+        "child-passport" )
+            break;;
+        "name-change" )
+            break;;
+        "lost-passport" )
+            break;;
+        "damaged-passport" )
+            break;;
+        "stolen-passport" )
             break;;
         * )
-            echo "That ($product) was not one of the options, try again.";;
+            echo "Create: $(cyan $product) was not one of the options, try again.";;
     esac
     done
 }
 
 prompt_options() {
-    echo -n "How many orders would you like to make: "
+    echo -n "Create: How many orders would you like to make: "
     read QTY
     clear
-    echo -n "Would you like to fill out the user's profile (y/n): "
+    echo -n "Create: Would you like to fill out the user's profile $(yellow '(y/n)'): "
     read FILL
     clear
-    echo -n "After the application is filled out would you like to process the application (y/n): "
+    echo -n "Create: After the application is filled out would you like to process the application $(yellow '(y/n)'): "
     read PROCESS
     clear
-    echo -n "Would you like to cancel the order, and create a refund (y/n): "
+    echo -n "Create: Would you like to cancel the order, and create a refund $(yellow '(y/n)'): "
     read REFUND
     clear
-    echo -n "...and finally, do you want the script to print user/order info (y/n): "
+    echo -n "Create: ...and finally, do you want the script to print user/order info $(yellow '(y/n)'): "
     read INFO
     clear
 }
 
 script_select() {
-    script_options=("auto" "custom" "e2e" "mailaway" "trial")
 
     select script in "${script_options[@]}"
     do
@@ -101,10 +128,12 @@ script_select() {
             break;;
         "mailaway" )
             break;;
+        "random" )
+            break;;
         "trial" )
             break;;
         * )
-            echo "That script you selected ($script) was not one of the options";;
+            echo "Create: That script you selected $(cyan $script) was not one of the options";;
     esac
     done
 
@@ -113,8 +142,7 @@ script_select() {
 }
 
 shipping_select() {
-    echo "Select the shipping speed/service for the order"
-    shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
+    echo "Create: Select the $(purple shipping speed/service) for the order"
 
     select shipping in "${shipping_options[@]}"
     do
@@ -132,14 +160,13 @@ shipping_select() {
         "smart" )
             break;;
         * )
-            echo "That ($shipping) was not one of the options";;
+            echo "Create: $(purple $shipping) was not one of the options, try again.";;
     esac
     done
 }
 
 site_select() {
-    echo "Select the source of the order"
-    site_options=("passportcenter" "passportrenewal")
+    echo "Create: Select the $(yellow source) of the order"
 
     select site in "${site_options[@]}"
     do
@@ -149,14 +176,14 @@ site_select() {
         "passportrenewal" )
             break;;
         * )
-            echo "That ($site) was not one of the options, try again";;
+            echo "Create: $(yellow $site) was not one of the options, try again";;
     esac
     done
 }
 
 case $1 in 
     auto )
-        echo "Ok, creating a standard new passport order, should be automanifested."
+        echo "Create: Ok, creating a $(purple standard) $(cyan new-passport) order, should be automanifested."
         prompt_options
         for ((i=0;i<$QTY;i++))
         do
@@ -164,14 +191,14 @@ case $1 in
         done
         ;;
     custom )
-        echo "Creating a custom order, follow the directions below:"
+        echo "Create: Creating a $(cyan custom order), follow the directions below:"
         custom_options
-        echo -n "Is all of the information above correct? (y/n): "
+        echo -n "Is all of the information above correct? $(yellow '(y/n)'): "
         read ORDER_OK
         if [[ $ORDER_OK == "y" ]];
         then
             clear
-            echo -n "Would you like to do some additional tasks, like filling the app? (y/n) "
+            echo -n "Would you like to do some additional tasks, like filling the app? $(yellow '(y/n)'): "
             read PROMPT
             [ $PROMPT == "y" ] && prompt_options || QTY=1
             for ((i=0;i<$QTY;i++))
@@ -180,24 +207,36 @@ case $1 in
             done
 
         else
-            echo "Try again?"
+            echo "Create: $(red 'Try again?')"
             shared/create
         fi        
         ;;
     e2e )
-        echo "Please note, to run this script you have to have e2e installed"
+        echo "Create: Ok, creating a $(cyan e2e) order. Please note, to run this script you have to have e2e suite installed"
+        echo "Create: At the moment this script only creates an order in portal"
         create_e2e
         ;;
     mailaway )
-        echo "Ok, creating a standard mailaway order."
+        echo "Create: Ok, creating a $(purple standard) $(cyan mailaway) order."
         prompt_options
         for ((i=0;i<$QTY;i++))
         do
             create_mailaway
         done
         ;;
+    random )
+        echo "Create: Ok, creating a $(cyan random) order, godspeed."
+        echo "Create: First select your options"
+        # echo "skip by typing $(yellow 'S')"
+        prompt_options
+        
+        for ((i=0;i<$QTY;i++))
+        do
+            create_random
+        done
+        ;;
     trial )
-        echo "Creating a hot lead / trial order"
+        echo "Create: Creating a $(cyan hot lead / trial order)"
         prompt_options
         for ((i=0;i<$QTY;i++))
         do
@@ -205,10 +244,10 @@ case $1 in
         done
         ;;
     * ) 
-        echo "What type of order would you like to create?"
-        echo "Automanifest Order, Custom Order, E2E Order, Mailaway Order, or Trial Order"
+        echo "Create: What type of order would you like to create?"
+        echo "Create: $(cyan Automanifest), $(cyan Custom), $(cyan E2E), $(cyan Mailaway), $(cyan Random), or a $(cyan Trial) Order"
         script_select
-        ;;
+        exit;;
 esac
 
 
