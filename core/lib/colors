@@ -1,6 +1,6 @@
 #! /usr/local/bin/bash
 
-reset="${escape}[0m"
+reset="\033[0m"
 
 # Color codes
 red=$(tput setaf 1)
