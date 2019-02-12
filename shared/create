@@ -1,0 +1,254 @@
+#! /usr/local/bin/bash
+clear
+
+# Making some constants
+# TODO: auto-generate these constants
+product_options=("passport-renewal" "new-passport" "second-passport" "child-passport" "name-change" "lost-passport" "damaged-passport" "stolen-passport") 
+script_options=("auto" "custom" "e2e" "mailaway" "random" "trial")
+shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
+site_options=("passportcenter" "passportrenewal")
+
+
+create_options() {
+    OPTION_EMAIL=$1
+
+    [[ $FILL == "y" ]] && run core/fillapp "$OPTION_EMAIL" 
+    [[ $PROCESS == "y" ]] && run core/process "$OPTION_EMAIL" 
+    [[ $REFUND == "y" ]] && run core/refund rar "$OPTION_EMAIL" 
+    [[ $INFO == "y" ]] && run core/status "$OPTION_EMAIL"
+}
+
+create_auto() {
+    EMAIL="$(random_email)"
+    run core/createorder 'new-passport' 'standard' ""$EMAIL"" 'passportcenter'
+    create_options "$EMAIL"
+}
+
+create_custom() {
+    EMAIL="$(random_email)"
+    run core/createorder "$product" "$shipping" ""$EMAIL"" "$site"
+    create_options "$EMAIL"
+}
+
+create_e2e() {
+    cd ~/gw/gov-portal/tests/E2E-Testing && npm i | npm run update | npm run server
+    cd ~/gw/gov-portal/tests/E2E-Testing && npm run mailaway
+}
+
+create_mailaway() {
+    EMAIL="$(random_email)"
+    run core/createorder passport-renewal standard "$EMAIL"
+    create_options "$EMAIL"
+}
+
+create_random() {
+    # Random values for the payload
+    EMAIL="$(random_email)"
+    SELECTED_PRODUCT=${product_options[$RANDOM % ${#product_options[@]} ]}
+    SELECTED_SHIP=${shipping_options[$RANDOM % ${#shipping_options[@]} ]}
+    SELECTED_SITE=${site_options[$RANDOM % ${#site_options[@]} ]}
+
+    echo "Create: Creating a $(cyan "$SELECTED_PRODUCT") with $(purple "$SELECTED_SHIP") on $(yellow "$SELECTED_SITE")"
+    run core/createorder "$SELECTED_PRODUCT" "$SELECTED_SHIP" ""$EMAIL"" "$SELECTED_SITE"
+    create_options "$EMAIL"
+}
+
+create_trial() {
+    EMAIL="$(random_email)"
+    run core/createtrial new-passport rush "$EMAIL"
+    create_options "$EMAIL"
+}
+
+custom_options() {
+    site_select
+    clear
+    product_select
+    clear
+    shipping_select
+    clear
+    echo "Create: Ok so you want to make a $(yellow $site.com) order for a $(cyan $product), with $(purple $shipping) shipping."
+}
+
+product_select() {
+    echo "Create: Select the $(cyan product) you would like to order"
+        
+    select product in "${product_options[@]}"
+    do
+    case $product in
+        "passport-renewal" )
+            break;;
+        "new-passport" )
+            break;;
+        "second-passport" )
+            break;;
+        "child-passport" )
+            break;;
+        "name-change" )
+            break;;
+        "lost-passport" )
+            break;;
+        "damaged-passport" )
+            break;;
+        "stolen-passport" )
+            break;;
+        * )
+            echo "Create: $(cyan $product) was not one of the options, try again.";;
+    esac
+    done
+}
+
+prompt_options() {
+    echo -n "Create: How many orders would you like to make: "
+    read QTY
+    clear
+    echo -n "Create: Would you like to fill out the user's profile $(yellow '(y/n)'): "
+    read FILL
+    clear
+    echo -n "Create: After the application is filled out would you like to process the application $(yellow '(y/n)'): "
+    read PROCESS
+    clear
+    echo -n "Create: Would you like to cancel the order, and create a refund $(yellow '(y/n)'): "
+    read REFUND
+    clear
+    echo -n "Create: ...and finally, do you want the script to print user/order info $(yellow '(y/n)'): "
+    read INFO
+    clear
+}
+
+script_select() {
+
+    select script in "${script_options[@]}"
+    do
+    case $script in
+        "auto" )
+            break;;
+        "custom" )
+            break;;
+        "e2e" )
+            break;;
+        "mailaway" )
+            break;;
+        "random" )
+            break;;
+        "trial" )
+            break;;
+        * )
+            echo "Create: That script you selected $(cyan $script) was not one of the options";;
+    esac
+    done
+
+    clear
+    shared/create "$script"
+}
+
+shipping_select() {
+    echo "Create: Select the $(purple shipping speed/service) for the order"
+
+    select shipping in "${shipping_options[@]}"
+    do
+    case $shipping in
+        "same_day" )
+            break;;
+        "next_day" )
+            break;;
+        "priority" )
+            break;;
+        "rush" )
+            break;;
+        "standard" )
+            break;;
+        "smart" )
+            break;;
+        * )
+            echo "Create: $(purple $shipping) was not one of the options, try again.";;
+    esac
+    done
+}
+
+site_select() {
+    echo "Create: Select the $(yellow source) of the order"
+
+    select site in "${site_options[@]}"
+    do
+    case $site in
+        "passportcenter" )
+            break;;
+        "passportrenewal" )
+            break;;
+        * )
+            echo "Create: $(yellow $site) was not one of the options, try again";;
+    esac
+    done
+}
+
+case $1 in 
+    auto )
+        echo "Create: Ok, creating a $(purple standard) $(cyan new-passport) order, should be automanifested."
+        prompt_options
+        for ((i=0;i<$QTY;i++))
+        do
+            create_auto
+        done
+        ;;
+    custom )
+        echo "Create: Creating a $(cyan custom order), follow the directions below:"
+        custom_options
+        echo -n "Is all of the information above correct? $(yellow '(y/n)'): "
+        read ORDER_OK
+        if [[ $ORDER_OK == "y" ]];
+        then
+            clear
+            echo -n "Would you like to do some additional tasks, like filling the app? $(yellow '(y/n)'): "
+            read PROMPT
+            [ $PROMPT == "y" ] && prompt_options || QTY=1
+            for ((i=0;i<$QTY;i++))
+            do
+                create_custom
+            done
+
+        else
+            echo "Create: $(red 'Try again?')"
+            shared/create
+        fi        
+        ;;
+    e2e )
+        echo "Create: Ok, creating a $(cyan e2e) order. Please note, to run this script you have to have e2e suite installed"
+        echo "Create: At the moment this script only creates an order in portal"
+        create_e2e
+        ;;
+    mailaway )
+        echo "Create: Ok, creating a $(purple standard) $(cyan mailaway) order."
+        prompt_options
+        for ((i=0;i<$QTY;i++))
+        do
+            create_mailaway
+        done
+        ;;
+    random )
+        echo "Create: Ok, creating a $(cyan random) order, godspeed."
+        echo "Create: First select your options"
+        # echo "skip by typing $(yellow 'S')"
+        prompt_options
+        
+        for ((i=0;i<$QTY;i++))
+        do
+            create_random
+        done
+        ;;
+    trial )
+        echo "Create: Creating a $(cyan hot lead / trial order)"
+        prompt_options
+        for ((i=0;i<$QTY;i++))
+        do
+            create_trial
+        done
+        ;;
+    * ) 
+        echo "Create: What type of order would you like to create?"
+        echo "Create: $(cyan Automanifest), $(cyan Custom), $(cyan E2E), $(cyan Mailaway), $(cyan Random), or a $(cyan Trial) Order"
+        script_select
+        exit;;
+esac
+
+
+
