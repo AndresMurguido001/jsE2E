@@ -86,7 +86,7 @@ help() {
 }
 
 # Prompt Settings
-PROMPT="automation"
+PROMPT="Automation 🦄"
 
 # What to do when the program begins
 load_dependencies
@@ -106,7 +106,7 @@ set -o vi # Set up vi keybinds to be able to use up and down arrows for history
 while [ true ]
 do
 
-    read -e -p "@$PROMPT: " args
+    read -e -p "$PROMPT > " args
     history -s "$args" # Save command to history
 
     case $args in
