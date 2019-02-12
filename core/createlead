@@ -3,9 +3,9 @@
 # Parameters: product-type expediting_option [email] [passportrenewal]
 
 # Check for required params
-${1:?Must provide a product}
-${2:?Must provide an expediting option}
-${3:?Must provide an email}
+echo "${1:?Must provide a product}" > /dev/null
+echo "${2:?Must provide an expediting option}" > /dev/null
+echo "${3:?Must provide an email}" > /dev/null
 
 HOTLEAD_URL="$API_URL/hotlead"
 
