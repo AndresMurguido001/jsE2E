@@ -2,8 +2,12 @@
 
 # Parameters: product-type expediting_option [email] [passportrenewal]
 
+# Check for required params
+echo "${1:?Must provide a product}" > /dev/null
+echo "${2:?Must provide an expediting option}" > /dev/null
+
 # product option email source
-email="$(tern "$3" "$(random_email)")"
+email=${3:-$(random_email)}
 run core/createlead $1 $2 $email $4
 
 UUID=$(get_lead_uuid "$email" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d");

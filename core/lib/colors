@@ -1,15 +1,14 @@
 #! /usr/local/bin/bash
 
-escape='\033'
-reset="${escape}[0m"
+reset="\033[0m"
 
 # Color codes
-red="${escape}[0;31m"
-green="${escape}[0;32m"
-blue="${escape}[0;34m"
-purple="${escape}[0;35m"
-yellow="${escape}[1;33m"
-cyan="${escape}[0;36m"
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+blue=$(tput setaf 4)
+purple=$(tput setaf 5)
+yellow=$(tput setaf 3)
+cyan=$(tput setaf 6)
 
 red() {
     echo -e "${red}$1${reset}"

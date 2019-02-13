@@ -8,17 +8,18 @@
 
 # Interactive Prompt
 print_heading() {
-    echo -e -n "\e[0;32m"
+    echo -e -n "\033[0;32m"
     echo "  __   _  _  ____  __   _  _   __  ____  __  __   __ _"
     echo " / _\ / )( \(_  _)/  \ ( \/ ) / _\(_  _)(  )/  \ (  ( \ "
     echo "/    \) \/ (  )( (  O )/ \/ \/    \ )(   )((  O )/    / "
     echo "\_/\_/\____/ (__) \__/ \_)(_/\_/\_/(__) (__)\__/ \_)__) "
-    echo -e "\e[0m"
-    echo "Welcome to the automation suite."
-    echo "Root: $ROOT_DIRECTORY"
-    echo "Environment: $ENVIRONMENT"
-    echo "DB_HOST: $DB_HOST | API_URL: $API_URL"
-    echo -e "\e[0;32m________________________________________________________________\e[0m"
+    echo -e "\033[0m"
+    echo $(yellow "Welcome to the automation suite.")
+    echo $(yellow "Root:") $(cyan "$ROOT_DIRECTORY")
+    echo $(yellow "Environment:") $(cyan "$ENVIRONMENT")
+    echo $(yellow "DB_HOST:") $(cyan "$DB_HOST") 
+    echo $(yellow "API_URL:") $(cyan "$API_URL")
+    echo -e "\033[0;32m_____________________________________________________________________\033[0m"
     echo # Separate all the intro text from the rest of the program
 }
 
@@ -85,7 +86,7 @@ help() {
 }
 
 # Prompt Settings
-PROMPT="automation"
+PROMPT="Automation 🦄"
 
 # What to do when the program begins
 load_dependencies
@@ -105,7 +106,7 @@ set -o vi # Set up vi keybinds to be able to use up and down arrows for history
 while [ true ]
 do
 
-    read -e -p "@$PROMPT: " args
+    read -e -p "$PROMPT > " args
     history -s "$args" # Save command to history
 
     case $args in
