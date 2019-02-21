@@ -11,7 +11,7 @@ email=${3:-$(random_email)}
 run core/createlead $1 $2 $email $4
 
 UUID=$(get_lead_uuid "$email" | sed -E "s/\"//g" | sed -E "s/uuid//g" | sed -E "/^$/d");
-api_call "https://api.dev.govworks.com/api/trial/$UUID" '' "GET" #Hit this endpoint to start the trial
+api_call "$API_URL/trial/$UUID" '' "GET" #Hit this endpoint to start the trial
 
 set_user_password_to_password $email;
 
