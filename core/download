@@ -1,0 +1,22 @@
+# Check for required params
+echo ${1:?You must provide an email} > /dev/null
+
+get_user_info() {
+    # Argument 1 is user's email
+    local GET_USER_INFO_QUERY="SELECT applications.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id WHERE email = '$1' LIMIT 1"
+    local RESULT="$(sql "$GET_USER_INFO_QUERY")"
+    local UUID="$(remove_first_line_from_sql_output "$RESULT")"
+    echo "$UUID"
+}
+USER_EMAIL=$1
+UUID="$(get_user_info "$USER_EMAIL")"
+DOWNLOAD_URL="$API_URL/application/$UUID/download"
+
+echo "Download: Downloading app for user: $(purple "$1") to process"
+echo "Download: Detected application UUID $(green "$UUID")"
+
+login "$USER_EMAIL" # Gotta log in
+echo "Test whether COOKIE is avail $COOKIE"
+curl -o "./personal/downloads/$UUID.pdf" "$DOWNLOAD_URL" --cookie "$COOKIE"
+
+green "Process: If the response was 204 then your app should be processing"
