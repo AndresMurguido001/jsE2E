@@ -1,6 +1,14 @@
 # Check for required params
 echo ${1:?You must provide an email} > /dev/null
 
+get_application_status() {
+    # Argument 1 is application UUID
+    local GET_APP_STATUS_QUERY="SELECT status FROM applications WHERE uuid = '$1'"
+    local RESULT="$(sql "$GET_APP_STATUS_QUERY")"
+    APP_STATUS="$(remove_first_line_from_sql_output "$RESULT")"
+    echo "Download: Application is in a $(cyan $APP_STATUS) status"
+}
+
 get_user_info() {
     # Argument 1 is user's email
     local GET_USER_INFO_QUERY="SELECT applications.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id WHERE email = '$1' LIMIT 1"
@@ -8,15 +16,22 @@ get_user_info() {
     local UUID="$(remove_first_line_from_sql_output "$RESULT")"
     echo "$UUID"
 }
+
 USER_EMAIL=$1
 UUID="$(get_user_info "$USER_EMAIL")"
 DOWNLOAD_URL="$API_URL/application/$UUID/download"
 
 echo "Download: Downloading app for user: $(purple "$1") to process"
 echo "Download: Detected application UUID $(green "$UUID")"
+get_application_status "$UUID"
 
-login "$USER_EMAIL" # Gotta log in
-echo "Test whether COOKIE is avail $COOKIE"
-curl -o "./personal/downloads/$UUID.pdf" "$DOWNLOAD_URL" --cookie "$COOKIE"
-
-green "Process: If the response was 204 then your app should be processing"
+if [[ $APP_STATUS == "completed" ]];
+then
+    login "$USER_EMAIL" # Gotta log in
+    RESPONSE="$(curl -o "./personal/downloads/$UUID.pdf" "$DOWNLOAD_URL" --cookie "$COOKIE" --write-out "%{http_code}")"
+    echo "--------"
+    [[ $RESPONSE -ne 200 ]] && echo "$(red "We were unable to download packet, received a $RESPONSE from the server")"
+else
+    echo
+    echo "Application has not been completed yet. Please try to process application before trying to download."
+fi
