@@ -12,7 +12,7 @@ login "admin"
 # GET ORDER NUMBER
 get_user_info() {
     # Argument 1 is user's email
-    local GET_USER_INFO_QUERY="SELECT orders.order_number FROM users  JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id  WHERE email = '$1'"
+    local GET_USER_INFO_QUERY="SELECT orders.order_number FROM users  JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id  WHERE email = '$1' LIMIT 1"
     local RESULT="$(sql "$GET_USER_INFO_QUERY")"
     local ORDER_NUMBER="$(remove_first_line_from_sql_output "$RESULT")"
     echo "$ORDER_NUMBER"
