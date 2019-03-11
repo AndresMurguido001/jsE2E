@@ -2,4 +2,5 @@
 .env.*
 personal/*
 !personal/.gitkeep
+!personal/downloads.gitkeep
 .input_history
