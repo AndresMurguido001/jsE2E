@@ -1,5 +1,4 @@
 #! /usr/local/bin/bash
-clear
 echo
 echo "Images: Let's try to get an image for the user you just created"
 USER_EMAIL="$1"

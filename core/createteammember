@@ -25,6 +25,6 @@ rolesArray="$([ "$1" ] && create_roles_array "$1" || create_roles_array "csr")"
 echo "Create Team Member: Creating new team member named $(purple "$FIRSTNAME $LASTNAME"), with email $(purple "$email") and roles $(green "$rolesArray")"
 
 URL="$API_URL/team/create"
-PAYLOAD='{ "first_name": "'"$FIRSTNAME"'", "last_name": "'"$LASTNAME"'", "email": "'"$email"'", "active": true, "company_name": "GovWorks", "password": "password", "password_confirmation": "password", "title": "Phone Person","direct": "(351) 651-6816","roles": '"$rolesArray"' }'
+PAYLOAD='{ "first_name": "'"$FIRSTNAME"'", "last_name": "'"$LASTNAME"'", "email": "'"$email"'", "active": true, "company_name": "GovWorks", "password": "password", "password_confirmation": "password", "title": '"$rolesArray"',"direct": "(351) 651-6816","roles": '"$rolesArray"' }'
 
 api_call "$URL" "$PAYLOAD"
