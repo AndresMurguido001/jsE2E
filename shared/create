@@ -7,7 +7,8 @@ product_options=("passport-renewal" "new-passport" "second-passport" "child-pass
 script_options=("auto" "custom" "e2e" "mailaway" "random" "team" "trial")
 shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
 site_options=("passportcenter" "passportrenewal")
-role_options=("admin" "agent" "content manager" "courier" "courier manager" "cs manager" "csr" "logistics manager" "mailaway manager" "metric" "retention" "super admin")
+# Admin can't create "super admin" and something is wrong with "retention" and "mailaway manager", so taking those out.
+role_options=("admin" "agent" "content manager" "courier" "courier manager" "cs manager" "csr" "logistics manager" "metric")
 
 
 create_options() {
@@ -23,14 +24,12 @@ create_auto() {
     EMAIL="$(random_email)"
     run core/createorder 'new-passport' 'standard' ""$EMAIL"" 'passportcenter'
     create_options "$EMAIL"
-    clear
 }
 
 create_custom() {
     EMAIL="$(random_email)"
     run core/createorder "$product" "$shipping" ""$EMAIL"" "$site"
     create_options "$EMAIL"
-    clear
 }
 
 create_e2e() {
@@ -42,7 +41,6 @@ create_mailaway() {
     EMAIL="$(random_email)"
     run core/createorder passport-renewal standard "$EMAIL"
     create_options "$EMAIL"
-    clear
 }
 
 create_random() {
@@ -55,7 +53,6 @@ create_random() {
     echo "Create: Creating a $(cyan "$SELECTED_PRODUCT") with $(purple "$SELECTED_SHIP") on $(yellow "$SELECTED_SITE")"
     run core/createorder "$SELECTED_PRODUCT" "$SELECTED_SHIP" ""$EMAIL"" "$SELECTED_SITE"
     create_options "$EMAIL"
-    clear
 }
 
 create_team() {
@@ -66,14 +63,12 @@ create_team() {
     echo "Create: Creating a $(cyan "$SELECTED_ROLE") team member using $(purple "$EMAIL")"
     run core/createteammember "'"$SELECTED_ROLE"'" "$EMAIL"
     core/images "$EMAIL"
-    clear
 }
 
 create_trial() {
     EMAIL="$(random_email)"
     run core/createtrial new-passport rush "$EMAIL"
     create_options "$EMAIL"
-    clear
 }
 
 custom_options() {

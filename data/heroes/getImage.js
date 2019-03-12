@@ -13,7 +13,9 @@ const findHero = () => (hero) => {
 
 function parseData() { 
     const hero = heroes.find(findHero());
-    console.log(hero.images.sm)
+    if (hero && hero.images && hero.images.sm) {
+      console.log(hero.images.sm);
+    }
 }
 
 parseData();
