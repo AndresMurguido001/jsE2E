@@ -3,10 +3,11 @@
 # Parameters: email
 
 echo ${1:?You must provide an email} > /dev/null
+USER_EMAIL=$1
 
 get_application_fill_model() {
     #The argument is the product type. Ex. passport-renewal
-    set_name
+    get_name "$USER_EMAIL"
     PERSONAL_PROFILE=`envsubst <$ROOT_DIRECTORY/data/application-models/personal-profile.json`;
     APPLICATION_DATA=`envsubst <$ROOT_DIRECTORY/data/application-models/$1.json`;
 
@@ -22,19 +23,19 @@ get_user_order_product_type() {
     remove_first_line_from_sql_output "$RESULT"
 }
 
-GET_TRAVELER_QUERY="SELECT travelers.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN travelers ON travelers.order_id = user_orders.order_id WHERE users.email = '$1' LIMIT 1 "
+GET_TRAVELER_QUERY="SELECT travelers.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id JOIN travelers ON travelers.order_id = user_orders.order_id WHERE users.email = '$USER_EMAIL' LIMIT 1 "
 TRAVELER_UUID=$( sql "$GET_TRAVELER_QUERY" | sed -n '1!p' | sed -E "s/\"//g")
 
 URL="$API_URL/traveler/$TRAVELER_UUID/update/model"
 
 # GET LOGIN COOKIE
-login $1
+login $USER_EMAIL
 
 # POST FILLED APPLICATION FOR TRAVELER
 
 if [[ -z "$2" ]] #If the second parameter is empty, auto detect the product type of the application
 then
-    PRODUCT_TYPE="$(get_user_order_product_type "$1")"
+    PRODUCT_TYPE="$(get_user_order_product_type "$USER_EMAIL")"
     echo "Fill App: Detected $(cyan "$PRODUCT_TYPE") application"
 else
     PRODUCT_TYPE="$2"
@@ -43,4 +44,4 @@ fi
 
 api_call "$URL" "$(get_application_fill_model "$PRODUCT_TYPE")"
 echo
-echo "Fill App: Filled application for $(purple "$1")"
+echo "Fill App: Filled application for $(purple "$USER_EMAIL")"
