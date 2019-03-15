@@ -2,11 +2,13 @@
 clear
 
 # Making some constants
-# TODO: auto-generate these constants
+# TODO: auto-generate these constants by pulling from the db
 product_options=("passport-renewal" "new-passport" "second-passport" "child-passport" "name-change" "lost-passport" "damaged-passport" "stolen-passport") 
-script_options=("auto" "custom" "e2e" "mailaway" "random" "trial")
+script_options=("auto" "custom" "e2e" "mailaway" "random" "team" "trial")
 shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
 site_options=("passportcenter" "passportrenewal")
+# Admin can't create "super admin" and something is wrong with "retention" and "mailaway manager", so taking those out.
+role_options=("admin" "agent" "content manager" "courier" "courier manager" "cs manager" "csr" "logistics manager" "mailaway manager" "metric")
 
 
 create_options() {
@@ -51,6 +53,16 @@ create_random() {
     echo "Create: Creating a $(cyan "$SELECTED_PRODUCT") with $(purple "$SELECTED_SHIP") on $(yellow "$SELECTED_SITE")"
     run core/createorder "$SELECTED_PRODUCT" "$SELECTED_SHIP" ""$EMAIL"" "$SELECTED_SITE"
     create_options "$EMAIL"
+}
+
+create_team() {
+    # Create team member with random role
+    EMAIL="$(random_email)"
+    SELECTED_ROLE=${role_options[$RANDOM % ${#role_options[@]} ]}
+
+    echo "Create: Creating a $(cyan "$SELECTED_ROLE") team member using $(purple "$EMAIL")"
+    run core/createteammember "'"$SELECTED_ROLE"'" "$EMAIL"
+    core/images "$EMAIL"
 }
 
 create_trial() {
@@ -129,6 +141,8 @@ script_select() {
         "mailaway" )
             break;;
         "random" )
+            break;;
+        "team" )
             break;;
         "trial" )
             break;;
@@ -235,8 +249,20 @@ case $1 in
             create_random
         done
         ;;
+    team )
+        echo "Create: Ok, creating a $(cyan random) team member, godspeed."
+        echo -n "Create: First let me know how many you would want to make: "
+        read QTY
+        clear
+        
+        for ((i=0;i<$QTY;i++))
+        do
+            create_team
+        done
+        ;;
+    
     trial )
-        echo "Create: Creating a $(cyan hot lead / trial order)"
+        echo "Create: Creating a $(cyan "hot lead / trial order")"
         prompt_options
         for ((i=0;i<$QTY;i++))
         do
@@ -245,7 +271,7 @@ case $1 in
         ;;
     * ) 
         echo "Create: What type of order would you like to create?"
-        echo "Create: $(cyan Automanifest), $(cyan Custom), $(cyan E2E), $(cyan Mailaway), $(cyan Random), or a $(cyan Trial) Order"
+        echo "Create: $(cyan Automanifest), $(cyan Custom), $(cyan E2E), $(cyan Mailaway), $(cyan Random), $(cyan Team) or a $(cyan Trial) Order"
         script_select
         exit;;
 esac
