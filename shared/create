@@ -8,7 +8,7 @@ script_options=("auto" "custom" "e2e" "mailaway" "random" "team" "trial")
 shipping_options=("same_day" "next_day" "priority" "rush" "standard" "smart")
 site_options=("passportcenter" "passportrenewal")
 # Admin can't create "super admin" and something is wrong with "retention" and "mailaway manager", so taking those out.
-role_options=("admin" "agent" "content manager" "courier" "courier manager" "cs manager" "csr" "logistics manager" "metric")
+role_options=("admin" "agent" "content manager" "courier" "courier manager" "cs manager" "csr" "logistics manager" "mailaway manager" "metric")
 
 
 create_options() {
@@ -262,7 +262,7 @@ case $1 in
         ;;
     
     trial )
-        echo "Create: Creating a $(cyan hot lead / trial order)"
+        echo "Create: Creating a $(cyan "hot lead / trial order")"
         prompt_options
         for ((i=0;i<$QTY;i++))
         do
