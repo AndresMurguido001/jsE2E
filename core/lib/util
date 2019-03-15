@@ -5,6 +5,15 @@ get_lead_uuid() {
     sql "$QUERY";
 }
 
+get_name() {
+    # Argument 1 user's email
+    GET_NAME_QUERY="SELECT first_name, last_name FROM users WHERE email = '$1'"
+    RESULT="$(sql "$GET_NAME_QUERY")"
+    FULLNAME=$(remove_first_line_from_sql_output "$RESULT")
+    export FIRSTNAME=$(cut -f1 <<< $FULLNAME )
+    export LASTNAME=$(cut -f2 <<< $FULLNAME )
+}
+
 # Magic https://stackoverflow.com/a/449890
 set_name() {
     FULLNAME=$(head -$((${RANDOM} % `wc -l < ./data/names.txt` + 1)) ./data/names.txt | tail -1)
