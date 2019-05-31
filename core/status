@@ -17,7 +17,7 @@ FS_BOLD="1m"
 
 get_user_info() {
     # Argument 1 is user's email
-    GET_PRODUCT_TYPE_QUERY="SELECT users.first_name, users.last_name, products.subtype, orders.order_number, applications.status, applications.progress, travelers.friendly_name FROM users JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id JOIN products ON products.id = applications.product_id WHERE users.email = '$1'"
+    GET_PRODUCT_TYPE_QUERY="SELECT users.first_name, users.last_name, products.subtype, orders.order_number, applications.status, applications.progress, travelers.friendly_name, travelers.uuid, travelers.id, users.uuid, users.id, applications.uuid FROM users JOIN user_orders ON users.id = user_orders.user_id  JOIN orders ON orders.id = user_orders.order_id JOIN travelers ON travelers.order_id = orders.id JOIN applications ON applications.traveler_id = travelers.id JOIN products ON products.id = applications.product_id WHERE users.email = '$1'"
     RESULT="$(sql "$GET_PRODUCT_TYPE_QUERY")"
     USER_INFO=$(remove_first_line_from_sql_output "$RESULT" | awk '{$1=$1};1')
 }
@@ -32,18 +32,30 @@ USER_ORDER="$(cut -d ' ' -f4 <<< $USER_INFO)"
 USER_STATUS="$(cut -d ' ' -f5 <<< $USER_INFO)"
 USER_PROGRESS="$(cut -d ' ' -f6 <<< $USER_INFO)"
 TRAVELER_NAME="$(cut -d ' ' -f7 -f8 <<< $USER_INFO)"
+TRAVELER_UUID="$(cut -d ' ' -f9 <<< $USER_INFO)"
+TRAVELER_ID="$(cut -d ' ' -f10 <<< $USER_INFO)"
+USER_UUID="$(cut -d ' ' -f11 <<< $USER_INFO)"
+USER_ID="$(cut -d ' ' -f12 <<< $USER_INFO)"
+APP_UUID="$(cut -d ' ' -f13 <<< $USER_INFO)"
 
 # CUSTOMER STATUS
+echo
+echo
 echo -e "${FG_YELLOW}${FS_BOLD}------------ O R D E R  S T A T U S ------------"${RESET_ALL}
+echo "User:           $(cyan "$USER_NAME")"   
+echo " -- id:         $USER_ID"
+echo " -- uuid:       $USER_UUID"
+echo " -- email:      $USER_EMAIL"
 echo
+echo "Traveler:       $(cyan "$TRAVELER_NAME")"
+echo " -- id:         $TRAVELER_ID"
+echo " -- uuid:       $TRAVELER_UUID"
+echo " -- appuuid:    $APP_UUID"
 echo
-echo "Applicant: $USER_NAME"
-echo "Traveler: $TRAVELER_NAME"
-echo "Email: $USER_EMAIL"
-echo "Type: $USER_TYPE" 
-echo "Order: $USER_ORDER"
-echo "Status: $USER_STATUS"
-echo "Progress: $USER_PROGRESS%"
-echo
-echo
+echo "Order:          $(cyan "$USER_ORDER")"
+echo " -- type:       $USER_TYPE" 
+echo " -- status:     $USER_STATUS"
+echo " -- progress:   $USER_PROGRESS%"
 echo -e "${FG_YELLOW}${FS_BOLD}------------------------------------------------"${RESET_ALL}
+echo
+echo

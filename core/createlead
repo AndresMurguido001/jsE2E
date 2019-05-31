@@ -17,7 +17,7 @@ then
     SOURCE='passportcenter'
 else #Right now you could just pass anything as the second parameter and the source will be set to passportrenewal lol
     OPTION="$(get_option_pr $2)";
-    SOURCE='passportrenewal';
+    SOURCE='fastpassport';
 fi
 
 echo "Createlead: Product is: $PRODUCT"

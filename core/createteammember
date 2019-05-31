@@ -2,7 +2,13 @@
 
 # Parameters: [roles (comma separated)] [email]
 # Purpose: Get IDs and UUIDs of everything related to a user and its order
+# Admin can't create "super admin" and something is wrong with "retention" and "mailaway manager", so taking those out.
 # ["admin","cs manager","logistics manager","csr","courier","agent","courier manager","content manager","metric","mailaway manager","license manager","customer"]
+
+ title_case() { 
+     set ${*,,} ; 
+     echo ${*^} ; 
+     }
 
 create_roles_array() {
     # $1 is a comma separated list of roles
@@ -21,10 +27,10 @@ set_name
 login "admin"
 email="$(tern "$2" "$(random_email)")"
 rolesArray="$([ "$1" ] && create_roles_array "$1" || create_roles_array "csr")"
+TITLE=$(title_case $1)
 
 echo "Create Team Member: Creating new team member named $(purple "$FIRSTNAME $LASTNAME"), with email $(purple "$email") and roles $(green "$rolesArray")"
 
 URL="$API_URL/team/create"
-PAYLOAD='{ "first_name": "'"$FIRSTNAME"'", "last_name": "'"$LASTNAME"'", "email": "'"$email"'", "active": true, "company_name": "GovWorks", "password": "password", "password_confirmation": "password", "title": "Phone Person","direct": "(351) 651-6816","roles": '"$rolesArray"' }'
-
+PAYLOAD='{ "first_name": "'"$FIRSTNAME"'", "last_name": "'"$LASTNAME"'", "email": "'"$email"'", "active": true, "company_name": "GovWorks", "password": "password", "password_confirmation": "password", "title": "'"$TITLE"'","direct": "(351) 651-6816","roles": '"$rolesArray"' }'
 api_call "$URL" "$PAYLOAD"

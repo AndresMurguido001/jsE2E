@@ -1,0 +1,28 @@
+#! /usr/local/bin/bash
+echo
+echo "Images: Let's try to get an image for the user you just created"
+USER_EMAIL="$1"
+
+get_name() {
+    local GET_NAME_QUERY="SELECT first_name, last_name FROM users WHERE email = '$USER_EMAIL'"
+    local RESULT="$(sql "$GET_NAME_QUERY")"
+    local NAME="$(remove_first_line_from_sql_output "$RESULT")"
+    USER_FIRST="$(cut -f1 <<< "$NAME")"
+    USER_LAST="$(cut -f2 <<< "$NAME")"
+}
+set_avatar() {
+    # Argument $1 is IMG URL
+    local SET_AVATAR_QUERY="UPDATE users SET avatar = '$1' WHERE email = '$USER_EMAIL'"
+    sql "$SET_AVATAR_QUERY"
+}
+
+get_name
+IMG_URL="$(node ./data/heroes/getImage.js "$USER_FIRST" "$USER_LAST")"
+
+if [[ $IMG_URL == *.jpg ]]; 
+then
+    echo "Images: Setting avatar"
+    set_avatar "$IMG_URL"
+else 
+    echo "Images: Couldn't find a jpg for that user"
+fi

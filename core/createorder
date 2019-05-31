@@ -27,7 +27,7 @@ echo "Create Order: Creating a $(cyan "$2 $1") order on $(yellow "$SOURCE") unde
 PAYLOAD='{"merchant":"sandbox","source":"'"$SOURCE"'","itinerary":{"destinations":[{"country":null,"dates":{"startDate":null,"endDate":null}}],"travelers":{"adults":1,"children":0}},"travelers":[{"info":{"first_name":"'"$FIRSTNAME"'","last_name":"'"$LASTNAME"'","citizenship":null,"residency":null,"date_of_birth":"10/10/1989"},"products":[{"uuid":"'"$PRODUCT"'","option_uuid":"'"$OPTION"'","outbound_speed":"standard_overnight","option_label":"Next Day","product_label":"Passport Renewal","service_type":"next_day_service","cost":399,"addons":[]}]}],"user_profile":{"first_name":"'"$FIRSTNAME"'","last_name":"'"$LASTNAME"'","email":"'"$EMAIL"'","phones":[{"type":"mobile","friendly_name":"Mobile Number","country":"US","value":"9998989990","disabled":true,"required":true,"hint":"We ll use this number to send SMS notifications."},{"type":"landline","friendly_name":"Home or Office Number","country":"US","value":""}],"country":"US","company_name":null,"addresses":[{"type":"billing","address_1":"1301 sw 67th av","address_2":"Apt 4","city":"Miami","state":"FL","country":"US","postal_code":"33144"},{"type":"shipping","address_1":"1301 sw 67th av","address_2":"Apt 4","city":"Miami","state":"FL","country":"US","postal_code":"33144"}]},"gw_tracker":{"referer":"direct","query_string":""},"payment_token":"tok_visa","payment_descriptor":"COMMON.ACCEPT.INAPP.PAYMENT"}'
 
 api_call "$ORDER_URL" "$PAYLOAD"
-echo "Create Order: Changing user's password to: password"
+echo "Create Order: Changing user's password to: password@1"
 
 set_user_password_to_password "$EMAIL"
 
