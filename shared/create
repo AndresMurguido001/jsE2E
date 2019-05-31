@@ -33,8 +33,8 @@ create_custom() {
 }
 
 create_e2e() {
-    cd ~/gw/gov-portal/tests/E2E-Testing && npm i | npm run update | npm run server
-    cd ~/gw/gov-portal/tests/E2E-Testing && npm run mailaway
+    $(cd $E2E/ ; "php $ARTISAN dusk")
+    return
 }
 
 create_mailaway() {
@@ -228,7 +228,18 @@ case $1 in
     e2e )
         echo "Create: Ok, creating a $(cyan e2e) order. Please note, to run this script you have to have e2e suite installed"
         echo "Create: At the moment this script only creates an order in portal"
-        create_e2e
+        echo -n "Create: First let me know how many you would want to make: "
+        read QTY
+        clear
+        
+        for ((i=0;i<$QTY;i++))
+        do
+            # Just in case going to fire these 10 seconds apart from ea other
+            sleep 10
+            echo "Starting E2E Process# $i"
+            create_e2e
+            echo "Ended E2E Process# $i"
+        done
         ;;
     mailaway )
         echo "Create: Ok, creating a $(purple standard) $(cyan mailaway) order."
