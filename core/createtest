@@ -1,0 +1,6 @@
+#! /usr/local/bin/bash
+
+
+node $(dirname "$0")/../e2e/main.js;
+
+

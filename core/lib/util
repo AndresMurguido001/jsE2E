@@ -51,13 +51,13 @@ get_product() {
 }
 
 get_option() {
-    # $1 is the domain
-    # $2 is the option
-    DATA="$(curl --silent --insecure $API_URL/domains/$1/options)"
-    OPTION="$2_service"
-    UUID="$(node -e "console.log( JSON.parse('$DATA').data.options.find(obj => obj.slug === '$OPTION').uuid );")"
-    
-    echo "$UUID"
+    OBJ='{"type":"passport","country":"US","citizenship":"US","residency":"FL","domain":"'"$1"'"}';
+    DATA="$(curl -d "$OBJ" -H "Content-Type: application/json" -X POST --silent --insecure $API_URL/product/filterAttribute)"
+
+    parent_path="$(dirname "${BASH_SOURCE[0]}")"
+
+    RESULT="$( node "$parent_path"/personal/parse.js "$DATA" $2 $3)"
+    echo "$RESULT"
 }
 
 get_option_pc() {
@@ -70,3 +70,4 @@ get_option_pr() {
 
     get_option 'passportrenewal' "$1"
 }
+

@@ -10,16 +10,28 @@ ORDER_URL="$API_URL/order/create"
 
 PRODUCT="$(get_product $1)"
 
-if [[ -z "$4" || "$4" == "passportcenter" ]] #If the 4th parameter is empty or is passportcenter
+
+
+# $3 will be domain
+new_checkout=("fastpassport", "fedex", "departsmart", "rushmypassport")
+if [[ "${new_checkout[@]}" =~ "$3" ]]
+then 
+    OPTION="$(get_option "$3" "$1" "$2")"
+    SOURCE="$3"
+elif [[ "$3" == "passportrenewal" ]]
 then
+    OPTION="$(get_option_pr $2)"
+    SOURCE="$3"
+else 
     OPTION="$(get_option_pc $2)"
     SOURCE='passportcenter'
-else #Right now you could just pass anything as the second parameter and the source will be set to passportrenewal lol
-    OPTION="$(get_option_pr $2)";
-    SOURCE='passportrenewal';
 fi
 
-EMAIL=${3:-$(random_email)}
+
+
+EMAIL="$(random_email)"
+
+echo $EMAIL
 
 set_name
 echo "Create Order: Creating a $(cyan "$2 $1") order on $(yellow "$SOURCE") under the email $(purple "$EMAIL") for $(purple "$FIRSTNAME")"
@@ -32,3 +44,5 @@ echo "Create Order: Changing user's password to: password@1"
 set_user_password_to_password "$EMAIL"
 
 echo "Create Order: Order Created, Login with: $(purple "$EMAIL")"
+
+
