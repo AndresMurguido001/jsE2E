@@ -13,21 +13,8 @@ PRODUCT="$(get_product $1)"
 
 
 # $3 will be domain
-new_checkout=("fastpassport", "fedex", "departsmart", "rushmypassport")
-if [[ "${new_checkout[@]}" =~ "$3" ]]
-then 
-    OPTION="$(get_option "$3" "$1" "$2")"
-    SOURCE="$3"
-elif [[ "$3" == "passportrenewal" ]]
-then
-    OPTION="$(get_option_pr $2)"
-    SOURCE="$3"
-else 
-    OPTION="$(get_option_pc $2)"
-    SOURCE='passportcenter'
-fi
-
-
+OPTION="$(get_option "$3" "$1" "$2")"
+SOURCE="$3"
 
 EMAIL="$(random_email)"
 

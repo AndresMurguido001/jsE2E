@@ -60,14 +60,3 @@ get_option() {
     echo "$RESULT"
 }
 
-get_option_pc() {
-    # $1 is the option in slug form. Ex same_day
-    get_option 'passportcenter' "$1"
-}
-
-get_option_pr() {
-    # $1 is the option
-
-    get_option 'passportrenewal' "$1"
-}
-
